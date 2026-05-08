@@ -65,6 +65,7 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
   },
   drawerToolbar: {
     minHeight: 72,
+    gap: 10,
     borderBottom: '1px solid rgba(143, 211, 255, .14)',
     '& .MuiTypography-root': {
       color: '#eaf3f7',
@@ -79,6 +80,13 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
     '& .MuiIconButton-root:hover': {
       background: 'rgba(53, 208, 162, .13)',
     },
+  },
+  brandMark: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    objectFit: 'cover',
+    boxShadow: '0 8px 22px rgba(0, 0, 0, .28)',
   },
   mobileToolbar: {
     zIndex: 1,
@@ -164,6 +172,7 @@ const PageLayout = ({ menu, breadcrumbs, children }) => {
                 >
                   <BackIcon />
                 </IconButton>
+                <img className={classes.brandMark} src="/LogoMain.png" alt="" />
                 <PageTitle breadcrumbs={breadcrumbs} />
               </>
             )}
@@ -203,6 +212,7 @@ const PageLayout = ({ menu, breadcrumbs, children }) => {
             >
               <MenuIcon />
             </IconButton>
+            <img className={classes.brandMark} src="/LogoMain.png" alt="" />
             <PageTitle breadcrumbs={breadcrumbs} />
           </Toolbar>
         </AppBar>

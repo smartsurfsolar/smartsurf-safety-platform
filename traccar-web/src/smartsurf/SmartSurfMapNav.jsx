@@ -45,6 +45,13 @@ const useStyles = makeStyles()((theme, { mapExpanded }) => ({
       display: 'none',
     },
   },
+  logo: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    objectFit: 'cover',
+    boxShadow: '0 8px 20px rgba(0, 0, 0, .28)',
+  },
   button: {
     color: '#fff',
     borderColor: 'rgba(255,255,255,.28)',
@@ -105,6 +112,7 @@ const SmartSurfMapNav = ({ devicesOpen, setDevicesOpen, mapExpanded, setMapExpan
   return (
     <Paper className={classes.bar}>
       <Stack direction="row" gap={1} alignItems="center" sx={{ overflowX: 'auto' }}>
+        <img className={classes.logo} src="/LogoMain.png" alt="" />
         <Typography className={classes.title}>SMARTSURF</Typography>
         <Button
           className={classes.button}
