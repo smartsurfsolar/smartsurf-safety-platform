@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
+<properties>
+    <entry key='database.driver'>com.mysql.cj.jdbc.Driver</entry>
+    <entry key='database.url'>jdbc:mysql://smartsurf-db:3306/traccar?serverTimezone=UTC&amp;allowPublicKeyRetrieval=true&amp;useSSL=false</entry>
+    <entry key='database.user'>traccar</entry>
+    <entry key='database.password'>${TRACCAR_DB_PASSWORD}</entry>
+
+    <entry key='web.port'>8082</entry>
+    <entry key='web.path'>./web</entry>
+    <entry key='logger.file'>./logs/tracker-server.log</entry>
+    <entry key='osmand.enable'>true</entry>
+    <entry key='osmand.port'>5055</entry>
+</properties>
