@@ -62,33 +62,28 @@ The following files and folders are intentionally excluded from GitHub:
 - built frontend artifacts
 - `node_modules`
 
-## Current Build Decision
+## Current Architecture
 
-There was no Traccar deployment on this server before this setup. The selected path is:
+The public build is structured as a reproducible SmartSurf deployment:
 
-1. Clone and customize `traccar-web`.
-2. Build the branded React/MUI web app.
-3. Create a custom Docker image from `traccar/traccar:6.13.3`.
-4. Replace `/opt/traccar/web` with the SmartSurf-branded build.
-5. Run Traccar with MySQL and separate `smartsurf_` tables.
+1. SmartSurf customizes `traccar-web`.
+2. The branded React/MUI app is built as the user-facing interface.
+3. A Docker image based on `traccar/traccar:6.13.3` serves the SmartSurf web bundle.
+4. MySQL stores Traccar core data and separate `smartsurf_` tables.
+5. Senlay is integrated through an API proxy path so production credentials can remain server-side.
 
 This keeps Traccar tracking/auth stable while making the user-facing app feel like SmartSurf.
 
 ## Folder Structure
 
 ```text
-/opt/smartsurf-traccar/
+smartsurf-safety-platform/
   docker-compose.yml
   Dockerfile
   traccar.xml.template
-  traccar.xml                 # generated locally, not committed
   .env.example
-  .env                        # generated locally, not committed
   traccar-web/                # SmartSurf-customized Traccar web source
   mysql-init/                 # SmartSurf schema foundation
-  logs/
-  data/
-  mysql/
   backups/
   scripts/
   docs/
@@ -144,18 +139,14 @@ The SmartSurf Conditions page calls:
 /senlay-api/pwm?lat=...&lng=...
 ```
 
-The nginx example proxies that path to the main Senlay service:
-
-```text
-http://127.0.0.1:3001/api/pwm
-```
+The reverse proxy should forward that path to the Senlay API base URL for the target environment.
 
 This keeps the browser from needing a Senlay API key in the first MVP. Later, a backend SmartSurf service should call Senlay using server-side credentials and store snapshots with sessions/incidents.
 
 ## First Run
 
 ```bash
-cd /opt/smartsurf-traccar
+cd smartsurf-safety-platform
 scripts/init-env.sh
 scripts/render-config.sh
 cd traccar-web
@@ -167,50 +158,27 @@ docker compose up -d
 docker compose logs -f smartsurf-traccar
 ```
 
-The Traccar web UI is bound to localhost:
+The default compose file publishes:
 
 ```text
-http://127.0.0.1:8082
-```
-
-The Traccar Client/OsmAnd GPS ingest port is exposed:
-
-```text
+8082/tcp  web application
 5055/tcp
 ```
 
 Additional tracker protocol ports can be exposed later only when needed.
 
-## Public Domain
+## Public Deployment
 
-Product domain:
+Recommended product hosts:
 
 ```text
 smartsurf.global
+www.smartsurf.global
+app.smartsurf.global
+api.smartsurf.global
 ```
 
-Use `nginx-smartsurf-global.example.conf` after DNS points to this server.
-
-DNS must point to this VPS:
-
-```text
-smartsurf.global     A     194.233.72.55
-www.smartsurf.global A     194.233.72.55
-app.smartsurf.global A     194.233.72.55
-api.smartsurf.global A     194.233.72.55
-```
-
-Do not expose `traccar.smartsurf.global` for the normal product. The main public product should use `smartsurf.global`, with `app.smartsurf.global` and `api.smartsurf.global` available as support hostnames.
-
-The container is intentionally bound to localhost on `127.0.0.1:8082`. Public access should go through nginx + HTTPS.
-
-Then run:
-
-```bash
-nginx -t
-systemctl reload nginx
-certbot --nginx -d smartsurf.global -d www.smartsurf.global -d app.smartsurf.global -d api.smartsurf.global
-```
+Point DNS to the selected deployment host, terminate HTTPS at the reverse proxy, and adapt `nginx-smartsurf-global.example.conf` for the environment. Keep production credentials and generated runtime files outside the repository.
 
 ## Mobile Tracker Setup
 
@@ -229,7 +197,7 @@ Create the same device identifier in SmartSurf/Traccar before testing.
 ## Backup
 
 ```bash
-cd /opt/smartsurf-traccar
+cd smartsurf-safety-platform
 backups/backup.sh
 ```
 
@@ -239,11 +207,12 @@ The backup script dumps MySQL and archives reproducible config files.
 
 To move to another server:
 
-1. Copy `/opt/smartsurf-traccar`.
-2. Restore `mysql/` volume or import a MySQL dump.
-3. Run `scripts/render-config.sh`.
-4. Run `docker compose build && docker compose up -d`.
-5. Recreate nginx/certbot config.
+1. Clone this repository.
+2. Create environment variables from `.env.example`.
+3. Restore the database volume or import a MySQL dump.
+4. Run `scripts/render-config.sh`.
+5. Run `docker compose build && docker compose up -d`.
+6. Configure the reverse proxy and HTTPS for the target host.
 
 ## Known Limitations
 

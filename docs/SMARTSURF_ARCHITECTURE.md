@@ -71,10 +71,9 @@ That backend should read Traccar user/device/position data and write `smartsurf_
 
 ## Risk Engine v1
 
-The first SmartSurf safety model now follows the research report in
-`/root/SmartSurfLanding/deep-research-report (5).md`. The app treats risk as an
-interaction between rider profile, gear, spot geometry, live environment,
-session telemetry, and official/local overrides.
+The first SmartSurf safety model follows a watersports safety research synthesis.
+The app treats risk as an interaction between rider profile, gear, spot geometry,
+live environment, session telemetry, and official/local overrides.
 
 Core hazard classes:
 

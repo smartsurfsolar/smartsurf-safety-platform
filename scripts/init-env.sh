@@ -13,7 +13,6 @@ umask 077
   echo "TRACCAR_DB_PASSWORD=$(openssl rand -hex 24)"
   echo "TRACCAR_DB_ROOT_PASSWORD=$(openssl rand -hex 24)"
   echo "SMARTSURF_PUBLIC_HOST=smartsurf.global"
-  echo "SENLAY_API_PROXY_TARGET=http://127.0.0.1:3001"
 } > .env
 
-echo "Created /opt/smartsurf-traccar/.env"
+echo "Created .env"

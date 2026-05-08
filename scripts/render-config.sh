@@ -28,4 +28,4 @@ Path("traccar.xml").write_text(rendered)
 PY
 
 chmod 600 traccar.xml
-echo "Rendered /opt/smartsurf-traccar/traccar.xml"
+echo "Rendered traccar.xml"
