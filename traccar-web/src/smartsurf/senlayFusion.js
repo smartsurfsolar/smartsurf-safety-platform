@@ -267,16 +267,51 @@ const terrainFeature = (center, fusion) => {
 const addWindField = (features, center, fusion) => {
   const flowBearing = (fusion.windDirection + 180) % 360;
   const windLength = clamp(fusion.windKmh / 8, 0.9, 3.6);
-  const offsets = [-0.052, -0.034, -0.017, 0, 0.017, 0.034, 0.052];
+  const heatOffsets = [-0.102, -0.078, -0.054, -0.03, -0.006, 0.018, 0.042, 0.066, 0.09];
+  const offsets = [-0.066, -0.048, -0.03, -0.012, 0.006, 0.024, 0.042, 0.06];
+
+  heatOffsets.forEach((latOffset, row) => {
+    heatOffsets.forEach((lonOffset, col) => {
+      const terrainModifier = Math.sin((row + 1) * 1.7) * Math.cos((col + 1) * 1.15);
+      const coastalPulse = Math.sin((row - col) * 0.9);
+      const localSpeed = clamp(
+        fusion.windKmh + terrainModifier * 4 + coastalPulse * 2 + (fusion.gustKmh - fusion.windKmh) * 0.12,
+        2,
+        70,
+      );
+      features.push(pointFeature(`wind-heat-${row}-${col}`, 'windHeat', center.lat + latOffset, center.lon + lonOffset, {
+        speed: localSpeed,
+        gust: fusion.gustKmh,
+        label: `${Math.round(localSpeed)} km/h wind field`,
+        detail: 'Senlay fused wind field: nearby sensors, model data, terrain and coastal modifiers.',
+      }));
+    });
+  });
 
   offsets.forEach((latOffset, row) => {
     offsets.forEach((lonOffset, col) => {
+      const localBend = ((row * 7 + col * 5) % 11) - 5;
+      const particleLength = clamp(windLength * 0.48 + ((row + col) % 3) * 0.08, 0.45, 1.7);
+      features.push(lineFeature(
+        `wind-particle-${row}-${col}`,
+        'windParticle',
+        center.lat + latOffset,
+        center.lon + lonOffset,
+        flowBearing + localBend,
+        particleLength,
+        {
+          speed: fusion.windKmh + localBend * 0.35,
+          gust: fusion.gustKmh,
+          label: `${Math.round(fusion.windKmh)} km/h moving wind`,
+          detail: `Animated Senlay wind stream. Gusts ${Math.round(fusion.gustKmh)} km/h.`,
+        },
+      ));
       features.push(lineFeature(
         `wind-${row}-${col}`,
         'wind',
         center.lat + latOffset,
         center.lon + lonOffset,
-        flowBearing + ((row + col) % 2 ? 4 : -4),
+        flowBearing + localBend,
         windLength,
         {
           speed: fusion.windKmh,
@@ -339,13 +374,14 @@ const addSensorFeatures = (features, center, fusion) => {
     }
     features.push(pointFeature(`wind-sensor-${index}`, 'sensor', coords.lat, coords.lon, {
       sensorType: 'wind',
-      label: `${shortName(sensor, 'Wind')} ${speed !== null ? Math.round(speed) : '--'} km/h`,
+      label: `${index === 0 ? 'Nearest ' : ''}${speed !== null ? `${Math.round(speed)} km/h` : shortName(sensor, 'Wind')}`,
       detail: `${shortName(sensor, 'Wind sensor')} - ${sensor.distance_km ?? '?'} km away. Wind ${speed !== null ? Math.round(speed) : '--'} km/h${direction !== null ? ` from ${Math.round(direction)} deg` : ''}${gust !== null ? `, gusts ${Math.round(gust)} km/h` : ''}.`,
       source: sensor.source || 'wind',
       distance: firstNumber(sensor.distance_km),
       speed,
       gust,
       direction,
+      nearest: index === 0,
       updated: sensor.updated || sensor.obs_time || '',
     }));
     if (direction !== null) {
@@ -378,12 +414,13 @@ const addSensorFeatures = (features, center, fusion) => {
     }
     features.push(pointFeature(`marine-sensor-${index}`, 'sensor', coords.lat, coords.lon, {
       sensorType: 'marine',
-      label: `${shortName(buoy, 'Buoy')} ${wave !== null ? `${wave.toFixed(1)} m` : 'marine'}`,
+      label: `${index === 0 ? 'Nearest ' : ''}${wave !== null ? `${wave.toFixed(1)} m waves` : 'Marine'}`,
       detail: `${shortName(buoy, 'Ocean buoy')} - ${buoy.distance_km ?? '?'} km away. ${wave !== null ? `Waves ${wave.toFixed(1)} m. ` : ''}${water !== null ? `Water ${water.toFixed(1)} C. ` : ''}`,
       source: buoy.source || 'buoy',
       distance: firstNumber(buoy.distance_km),
       wave,
       water,
+      nearest: index === 0,
     }));
   });
 

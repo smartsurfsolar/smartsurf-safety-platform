@@ -29,9 +29,12 @@ import {
 
 const SOURCE_ID = 'smartsurf-senlay-fusion';
 const LAYERS = [
+  'smartsurf-senlay-wind-heat',
   'smartsurf-senlay-terrain',
   'smartsurf-senlay-source-links',
   'smartsurf-senlay-source-link-arrows',
+  'smartsurf-senlay-wind-particles-glow',
+  'smartsurf-senlay-wind-particles',
   'smartsurf-senlay-wind',
   'smartsurf-senlay-wind-arrows',
   'smartsurf-senlay-sensor-wind',
@@ -42,6 +45,7 @@ const LAYERS = [
   'smartsurf-senlay-current-arrows',
   'smartsurf-senlay-tides',
   'smartsurf-senlay-temperature',
+  'smartsurf-senlay-sensor-halos',
   'smartsurf-senlay-sensors',
   'smartsurf-senlay-gps',
   'smartsurf-senlay-labels',
@@ -280,6 +284,69 @@ const addFusionLayers = () => {
   }
 
   ensureLayer({
+    id: 'smartsurf-senlay-wind-heat',
+    type: 'heatmap',
+    filter: ['==', ['get', 'kind'], 'windHeat'],
+    paint: {
+      'heatmap-weight': [
+        'interpolate',
+        ['linear'],
+        ['get', 'speed'],
+        4,
+        0.18,
+        18,
+        0.42,
+        32,
+        0.7,
+        55,
+        1,
+      ],
+      'heatmap-intensity': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        6,
+        0.62,
+        11,
+        1.24,
+        14,
+        1.55,
+      ],
+      'heatmap-radius': [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        6,
+        42,
+        10,
+        74,
+        14,
+        118,
+      ],
+      'heatmap-opacity': 0.62,
+      'heatmap-color': [
+        'interpolate',
+        ['linear'],
+        ['heatmap-density'],
+        0,
+        'rgba(18, 64, 115, 0)',
+        0.12,
+        'rgba(37, 106, 190, .72)',
+        0.28,
+        'rgba(35, 208, 162, .76)',
+        0.46,
+        'rgba(220, 232, 87, .78)',
+        0.64,
+        'rgba(255, 164, 64, .82)',
+        0.82,
+        'rgba(229, 71, 91, .86)',
+        1,
+        'rgba(131, 70, 190, .9)',
+      ],
+    },
+  });
+
+  ensureLayer({
     id: 'smartsurf-senlay-terrain',
     type: 'fill',
     filter: ['==', ['get', 'kind'], 'terrain'],
@@ -344,6 +411,65 @@ const addFusionLayers = () => {
   });
 
   ensureLayer({
+    id: 'smartsurf-senlay-wind-particles-glow',
+    type: 'line',
+    filter: ['==', ['get', 'kind'], 'windParticle'],
+    paint: {
+      'line-color': [
+        'interpolate',
+        ['linear'],
+        ['get', 'speed'],
+        8,
+        '#7fd8ff',
+        22,
+        '#d8fff2',
+        34,
+        '#fff0a6',
+        48,
+        '#ff9a7c',
+      ],
+      'line-width': 5.8,
+      'line-opacity': 0.18,
+      'line-blur': 2.2,
+    },
+  });
+
+  ensureLayer({
+    id: 'smartsurf-senlay-wind-particles',
+    type: 'line',
+    filter: ['==', ['get', 'kind'], 'windParticle'],
+    paint: {
+      'line-color': [
+        'interpolate',
+        ['linear'],
+        ['get', 'speed'],
+        8,
+        '#c9f8ff',
+        22,
+        '#effff8',
+        34,
+        '#ffe98a',
+        48,
+        '#ffb08d',
+      ],
+      'line-width': [
+        'interpolate',
+        ['linear'],
+        ['get', 'speed'],
+        8,
+        1.15,
+        32,
+        1.8,
+        52,
+        2.4,
+      ],
+      'line-opacity': 0.78,
+      'line-blur': 0.25,
+      'line-dasharray': [0.12, 2.4],
+    },
+  });
+
+  ensureLayer({
     id: 'smartsurf-senlay-wind',
     type: 'line',
     filter: ['==', ['get', 'kind'], 'wind'],
@@ -361,9 +487,9 @@ const addFusionLayers = () => {
         55,
         '#ff6b6b',
       ],
-      'line-width': 2.6,
-      'line-opacity': 0.82,
-      'line-blur': 0.4,
+      'line-width': 1.1,
+      'line-opacity': 0.36,
+      'line-blur': 0.9,
     },
   });
 
@@ -519,6 +645,38 @@ const addFusionLayers = () => {
   });
 
   ensureLayer({
+    id: 'smartsurf-senlay-sensor-halos',
+    type: 'circle',
+    filter: ['==', ['get', 'kind'], 'sensor'],
+    paint: {
+      'circle-radius': [
+        'case',
+        ['==', ['get', 'nearest'], true],
+        18,
+        13,
+      ],
+      'circle-color': [
+        'match',
+        ['get', 'sensorType'],
+        'wind',
+        '#ffe98a',
+        'marine',
+        '#7cb7ff',
+        'air',
+        '#b7f7d1',
+        '#35d0a2',
+      ],
+      'circle-opacity': [
+        'case',
+        ['==', ['get', 'nearest'], true],
+        0.32,
+        0.18,
+      ],
+      'circle-blur': 0.45,
+    },
+  });
+
+  ensureLayer({
     id: 'smartsurf-senlay-sensors',
     type: 'circle',
     filter: ['==', ['get', 'kind'], 'sensor'],
@@ -546,8 +704,18 @@ const addFusionLayers = () => {
         '#35d0a2',
       ],
       'circle-opacity': 0.92,
-      'circle-stroke-color': '#06131f',
-      'circle-stroke-width': 2.5,
+      'circle-stroke-color': [
+        'case',
+        ['==', ['get', 'nearest'], true],
+        '#ffffff',
+        '#06131f',
+      ],
+      'circle-stroke-width': [
+        'case',
+        ['==', ['get', 'nearest'], true],
+        3,
+        2,
+      ],
     },
   });
 
@@ -570,7 +738,12 @@ const addFusionLayers = () => {
     filter: ['in', ['get', 'kind'], ['literal', ['sensor', 'temperature', 'gps', 'tide']]],
     layout: {
       'text-field': ['get', 'label'],
-      'text-size': 12,
+      'text-size': [
+        'case',
+        ['==', ['get', 'nearest'], true],
+        13,
+        11,
+      ],
       'text-offset': [0, 1.35],
       'text-anchor': 'top',
       'text-allow-overlap': false,
@@ -638,6 +811,9 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
     if (!enabled) return;
     setVisible('smartsurf-senlay-source-links', layers.sensors);
     setVisible('smartsurf-senlay-source-link-arrows', layers.sensors);
+    setVisible('smartsurf-senlay-wind-heat', layers.wind);
+    setVisible('smartsurf-senlay-wind-particles-glow', layers.wind);
+    setVisible('smartsurf-senlay-wind-particles', layers.wind);
     setVisible('smartsurf-senlay-wind', layers.wind);
     setVisible('smartsurf-senlay-wind-arrows', layers.wind);
     setVisible('smartsurf-senlay-sensor-wind', layers.wind && layers.sensors);
@@ -647,12 +823,42 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
     setVisible('smartsurf-senlay-current', layers.currents);
     setVisible('smartsurf-senlay-current-arrows', layers.currents);
     setVisible('smartsurf-senlay-terrain', layers.terrain);
+    setVisible('smartsurf-senlay-sensor-halos', layers.sensors);
     setVisible('smartsurf-senlay-sensors', layers.sensors);
     setVisible('smartsurf-senlay-tides', layers.tides);
     setVisible('smartsurf-senlay-temperature', layers.temperature);
     setVisible('smartsurf-senlay-gps', layers.gps);
     setVisible('smartsurf-senlay-labels', layers.sensors || layers.temperature || layers.gps || layers.tides);
   }, [enabled, layers, fusion]);
+
+  useEffect(() => {
+    if (!enabled) return () => {};
+    let frame = 0;
+    const steps = [
+      [0.12, 2.4],
+      [0.22, 2.15],
+      [0.34, 1.9],
+      [0.48, 1.65],
+      [0.62, 1.38],
+      [0.78, 1.12],
+    ];
+    const interval = window.setInterval(() => {
+      frame = (frame + 1) % steps.length;
+      if (map.getLayer('smartsurf-senlay-wind-particles')) {
+        map.setPaintProperty('smartsurf-senlay-wind-particles', 'line-dasharray', steps[frame]);
+      }
+      if (map.getLayer('smartsurf-senlay-sensor-wind')) {
+        map.setPaintProperty('smartsurf-senlay-sensor-wind', 'line-dasharray', steps[(frame + 2) % steps.length]);
+      }
+      if (map.getLayer('smartsurf-senlay-current')) {
+        map.setPaintProperty('smartsurf-senlay-current', 'line-dasharray', steps[(frame + 3) % steps.length]);
+      }
+      if (map.getLayer('smartsurf-senlay-swell')) {
+        map.setPaintProperty('smartsurf-senlay-swell', 'line-dasharray', [1.8 + frame * 0.12, 1.1]);
+      }
+    }, 420);
+    return () => window.clearInterval(interval);
+  }, [enabled]);
 
   useEffect(() => {
     if (!enabled) return () => {};
