@@ -33,6 +33,8 @@ const useStyles = makeStyles()((theme, { mapExpanded }) => ({
       top: theme.spacing(1),
       left: theme.spacing(1),
       right: theme.spacing(1),
+      borderRadius: 14,
+      padding: theme.spacing(0.5),
     },
   },
   title: {
@@ -51,6 +53,11 @@ const useStyles = makeStyles()((theme, { mapExpanded }) => ({
     borderRadius: 10,
     objectFit: 'cover',
     boxShadow: '0 8px 20px rgba(0, 0, 0, .28)',
+    [theme.breakpoints.down('sm')]: {
+      width: 28,
+      height: 28,
+      borderRadius: 8,
+    },
   },
   button: {
     color: '#fff',
@@ -58,6 +65,11 @@ const useStyles = makeStyles()((theme, { mapExpanded }) => ({
     whiteSpace: 'nowrap',
     borderRadius: 10,
     fontWeight: 800,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 'auto',
+      padding: theme.spacing(0.5, 1),
+      fontSize: 12,
+    },
   },
   secondaryButton: {
     color: '#eaf3f7',
@@ -69,6 +81,11 @@ const useStyles = makeStyles()((theme, { mapExpanded }) => ({
     '&:hover': {
       borderColor: 'rgba(53, 208, 162, .55)',
       background: 'rgba(53, 208, 162, .1)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 'auto',
+      padding: theme.spacing(0.5, 1),
+      fontSize: 12,
     },
   },
 }));
@@ -111,7 +128,12 @@ const SmartSurfMapNav = ({ devicesOpen, setDevicesOpen, mapExpanded, setMapExpan
 
   return (
     <Paper className={classes.bar}>
-      <Stack direction="row" gap={1} alignItems="center" sx={{ overflowX: 'auto' }}>
+      <Stack
+        direction="row"
+        gap={{ xs: 0.5, sm: 1 }}
+        alignItems="center"
+        sx={{ overflowX: 'auto', scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}
+      >
         <img className={classes.logo} src="/LogoMain.png" alt="" />
         <Typography className={classes.title}>SMARTSURF</Typography>
         <Button

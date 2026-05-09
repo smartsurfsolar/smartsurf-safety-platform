@@ -46,6 +46,15 @@ const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(1),
+    zIndex: 2,
+    [theme.breakpoints.down('sm')]: {
+      top: theme.spacing(1),
+      right: theme.spacing(1),
+      gap: theme.spacing(0.5),
+      '& .MuiFormControl-root': {
+        maxWidth: 112,
+      },
+    },
   },
   container: {
     display: 'flex',
@@ -58,6 +67,9 @@ const useStyles = makeStyles()((theme) => ({
   title: {
     fontWeight: 800,
     lineHeight: 1.08,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 28,
+    },
   },
   subtitle: {
     color: theme.palette.text.secondary,
@@ -70,6 +82,10 @@ const useStyles = makeStyles()((theme) => ({
     justifyContent: 'center',
     gap: theme.spacing(4),
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      gap: theme.spacing(2),
+      flexWrap: 'wrap',
+    },
   },
   registerButton: {
     minWidth: 'unset',

@@ -55,6 +55,11 @@ const useStyles = makeStyles()((theme) => ({
         borderColor: '#35d0a2',
       },
     },
+    [theme.breakpoints.down('md')]: {
+      minHeight: 56,
+      padding: theme.spacing(0.75, 1),
+      gap: theme.spacing(0.75),
+    },
   },
   title: {
     color: '#35d0a2',
@@ -72,6 +77,10 @@ const useStyles = makeStyles()((theme) => ({
     padding: theme.spacing(2),
     gap: theme.spacing(2),
     width: theme.dimensions.drawerWidthTablet,
+    [theme.breakpoints.down('sm')]: {
+      width: 'calc(100vw - 32px)',
+      maxWidth: 340,
+    },
   },
 }));
 

@@ -23,7 +23,7 @@ export const FieldGrid = ({ children }) => (
   <Box
     sx={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'repeat(auto-fit, minmax(220px, 1fr))' },
       gap: 2,
     }}
   >
@@ -54,12 +54,23 @@ export const SelectInput = ({ label, value, onChange, options }) => (
 );
 
 export const ToggleInput = ({ label, checked, onChange }) => (
-  <FormControlLabel control={<Checkbox checked={Boolean(checked)} onChange={onChange} />} label={label} />
+  <FormControlLabel
+    sx={{ alignItems: 'flex-start', '& .MuiFormControlLabel-label': { lineHeight: 1.35, pt: 0.8 } }}
+    control={<Checkbox checked={Boolean(checked)} onChange={onChange} />}
+    label={label}
+  />
 );
 
 export const SaveBar = ({ saving, onSave, message }) => (
   <Stack direction={{ xs: 'column', sm: 'row' }} gap={2} sx={{ mt: 3 }} alignItems={{ sm: 'center' }}>
-    <Button variant="contained" color="secondary" size="large" onClick={onSave} disabled={saving}>
+    <Button
+      variant="contained"
+      color="secondary"
+      size="large"
+      onClick={onSave}
+      disabled={saving}
+      sx={{ width: { xs: '100%', sm: 'auto' } }}
+    >
       {saving ? 'Saving...' : 'Save'}
     </Button>
     {message && <Alert severity="info" sx={{ flex: 1 }}>{message}</Alert>}

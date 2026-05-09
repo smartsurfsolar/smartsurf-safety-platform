@@ -75,13 +75,16 @@ const useStyles = makeStyles()((theme) => ({
     },
     [theme.breakpoints.down('md')]: {
       left: theme.spacing(1),
-      right: theme.spacing(7.5),
-      bottom: theme.spacing(7),
-      height: '42vh',
-      minHeight: 280,
-      maxHeight: 'calc(100vh - 150px)',
+      right: theme.spacing(1),
+      bottom: theme.spacing(1),
+      height: '34vh',
+      minHeight: 220,
+      maxHeight: 310,
+      padding: theme.spacing(1.1),
       overflowY: 'auto',
       gridTemplateColumns: '1fr',
+      gap: theme.spacing(1),
+      borderRadius: 14,
     },
   },
   summaryBlock: {
@@ -106,6 +109,8 @@ const useStyles = makeStyles()((theme) => ({
     },
     [theme.breakpoints.down('md')]: {
       gridColumn: 'auto',
+      borderTop: 0,
+      paddingTop: 0,
     },
   },
   layerGrid: {
@@ -117,7 +122,9 @@ const useStyles = makeStyles()((theme) => ({
       gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
     },
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: 'repeat(4, max-content)',
+      overflowX: 'auto',
+      paddingBottom: theme.spacing(0.25),
     },
   },
   checkbox: {
@@ -125,6 +132,7 @@ const useStyles = makeStyles()((theme) => ({
     '& .MuiFormControlLabel-label': {
       fontSize: 13,
       fontWeight: 700,
+      whiteSpace: 'nowrap',
     },
     '& .MuiCheckbox-root': {
       color: '#8fd3ff',
@@ -138,6 +146,13 @@ const useStyles = makeStyles()((theme) => ({
     gridTemplateColumns: '1fr 1fr',
     gap: theme.spacing(1),
     marginTop: theme.spacing(1.5),
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: 'repeat(4, minmax(108px, 1fr))',
+      overflowX: 'auto',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr 1fr',
+    },
   },
   miniFact: {
     padding: theme.spacing(1),
@@ -706,7 +721,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
             <Chip size="small" label={`Kite ${suggestion.recommendedKite}`} />
             <Chip size="small" label={`Confidence ${Math.round((fusion.confidence || suggestion.confidence) * 100)}%`} />
           </Stack>
-          <Typography className={classes.muted} sx={{ mt: 1 }}>
+          <Typography className={classes.muted} sx={{ mt: 1, display: { xs: 'none', sm: 'block' } }}>
             {suggestion.recommendedAction}
           </Typography>
           <Typography sx={{ mt: 1, fontWeight: 800 }}>
@@ -734,7 +749,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
         )}
       </Box>
 
-      <Box className={classes.feedBlock}>
+      <Box className={classes.feedBlock} sx={{ display: { xs: 'none', md: 'block' } }}>
         {suggestion && <SenlayContextFeed fusion={fusion} />}
       </Box>
 

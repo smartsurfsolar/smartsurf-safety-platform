@@ -87,6 +87,12 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
     borderRadius: 12,
     objectFit: 'cover',
     boxShadow: '0 8px 22px rgba(0, 0, 0, .28)',
+    flex: '0 0 auto',
+    [theme.breakpoints.down('sm')]: {
+      width: 30,
+      height: 30,
+      borderRadius: 9,
+    },
   },
   mobileToolbar: {
     zIndex: 1,
@@ -97,6 +103,11 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
     '& .MuiTypography-root': {
       color: '#eaf3f7',
       fontWeight: 800,
+    },
+    '& .MuiToolbar-root': {
+      minHeight: 58,
+      gap: theme.spacing(1),
+      overflow: 'hidden',
     },
     '@media print': {
       display: 'none',
@@ -109,6 +120,13 @@ const useStyles = makeStyles()((theme, { miniVariant }) => ({
     flexDirection: 'column',
     overflowY: 'auto',
     background: '#071827',
+  },
+  mobileTitle: {
+    minWidth: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    fontSize: 16,
   },
 }));
 
@@ -126,13 +144,8 @@ const PageTitle = ({ breadcrumbs }) => {
     );
   }
   return (
-    <Breadcrumbs>
-      {breadcrumbs.slice(0, -1).map((breadcrumb) => (
-        <Typography variant="h6" color="inherit" key={breadcrumb}>
-          {t(breadcrumb)}
-        </Typography>
-      ))}
-      <Typography variant="h6" color="textPrimary">
+    <Breadcrumbs sx={{ minWidth: 0, overflow: 'hidden' }}>
+      <Typography variant="h6" color="textPrimary" noWrap sx={{ minWidth: 0, fontSize: 16 }}>
         {t(breadcrumbs[breadcrumbs.length - 1])}
       </Typography>
     </Breadcrumbs>

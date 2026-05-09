@@ -9,6 +9,10 @@ const useStyles = makeStyles()((theme) => ({
     height: '100%',
     background:
       'linear-gradient(135deg, #06131f 0%, #0d2740 48%, #092a35 100%)',
+    [theme.breakpoints.down('sm')]: {
+      minHeight: '100%',
+      height: 'auto',
+    },
   },
   sidebar: {
     display: 'flex',
@@ -24,7 +28,7 @@ const useStyles = makeStyles()((theme) => ({
       width: theme.dimensions.sidebarWidthTablet,
     },
     [theme.breakpoints.down('sm')]: {
-      width: '0px',
+      display: 'none',
     },
   },
   paper: {
@@ -36,14 +40,26 @@ const useStyles = makeStyles()((theme) => ({
     background:
       'linear-gradient(180deg, rgba(255,255,255,.98), rgba(241,247,251,.96))',
     boxShadow: '-2px 0px 32px rgba(0, 0, 0, 0.34)',
+    minWidth: 0,
     [theme.breakpoints.up('lg')]: {
       padding: theme.spacing(0, 25, 0, 0),
+    },
+    [theme.breakpoints.down('sm')]: {
+      minHeight: '100vh',
+      justifyContent: 'flex-start',
+      paddingTop: theme.spacing(5),
+      boxShadow: 'none',
     },
   },
   form: {
     maxWidth: theme.spacing(52),
     padding: theme.spacing(5),
     width: '100%',
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2),
+      maxWidth: '100%',
+    },
   },
   sidebarCopy: {
     maxWidth: 360,

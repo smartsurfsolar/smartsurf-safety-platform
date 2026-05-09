@@ -46,6 +46,15 @@ const useStyles = makeStyles()((theme) => ({
     zIndex: 6,
     background: 'transparent',
     boxShadow: 'none',
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+      left: theme.spacing(1),
+      right: theme.spacing(1),
+      top: theme.spacing(7.5),
+      borderRadius: 14,
+      overflow: 'hidden',
+      boxShadow: '0 16px 40px rgba(0,0,0,.25)',
+    },
   },
   middle: {
     flex: 1,
@@ -55,6 +64,9 @@ const useStyles = makeStyles()((theme) => ({
     borderLeft: '1px solid rgba(53, 208, 162, .16)',
     borderRight: '1px solid rgba(53, 208, 162, .16)',
     borderBottom: '1px solid rgba(53, 208, 162, .16)',
+    [theme.breakpoints.down('md')]: {
+      border: 0,
+    },
   },
   contentMap: {
     pointerEvents: 'auto',
@@ -68,6 +80,16 @@ const useStyles = makeStyles()((theme) => ({
     minHeight: 0,
     background: '#071827',
     color: '#eaf3f7',
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+      left: theme.spacing(1),
+      right: theme.spacing(1),
+      top: theme.spacing(16),
+      bottom: theme.spacing(1),
+      borderRadius: 14,
+      overflow: 'hidden',
+      boxShadow: '0 18px 50px rgba(0,0,0,.32)',
+    },
   },
 }));
 

@@ -22,13 +22,17 @@ const useStyles = makeStyles()((theme) => ({
       'linear-gradient(180deg, #071827 0%, #082338 100%)',
     color: '#eaf3f7',
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(1.25),
     },
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
     gap: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: 'minmax(0, 1fr)',
+      gap: theme.spacing(1.25),
+    },
   },
   card: {
     borderRadius: 16,
@@ -36,6 +40,12 @@ const useStyles = makeStyles()((theme) => ({
     background: 'linear-gradient(145deg, rgba(16, 38, 61, .98), rgba(9, 32, 52, .98))',
     color: '#eaf3f7',
     boxShadow: '0 16px 34px rgba(0, 0, 0, .22)',
+    [theme.breakpoints.down('sm')]: {
+      borderRadius: 12,
+      '& .MuiCardContent-root': {
+        padding: theme.spacing(1.5),
+      },
+    },
     '& .MuiTypography-body1, & .MuiTypography-body2': {
       color: '#c4d6e4',
     },
@@ -54,6 +64,13 @@ const useStyles = makeStyles()((theme) => ({
     color: '#fff',
     border: '1px solid rgba(53, 208, 162, .22)',
     boxShadow: '0 18px 38px rgba(0, 0, 0, .26)',
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(1.25),
+      borderRadius: 14,
+      '& .MuiCardContent-root': {
+        padding: theme.spacing(1.75),
+      },
+    },
   },
   heroText: {
     color: '#c4d6e4',
@@ -62,6 +79,13 @@ const useStyles = makeStyles()((theme) => ({
   actions: {
     marginTop: theme.spacing(2),
     flexWrap: 'wrap',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      '& .MuiButton-root': {
+        width: '100%',
+      },
+    },
   },
 }));
 
@@ -72,7 +96,15 @@ export const SmartSurfPage = ({ eyebrow, title, text, actions, children }) => {
       <Card className={classes.hero}>
         <CardContent>
           <Typography variant="overline" color="secondary">{eyebrow}</Typography>
-          <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.05, mt: 0.5 }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 800,
+              lineHeight: 1.05,
+              mt: 0.5,
+              fontSize: { xs: 34, sm: 44, md: 48 },
+            }}
+          >
             {title}
           </Typography>
           {text && (
