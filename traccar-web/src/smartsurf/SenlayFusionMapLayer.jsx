@@ -59,7 +59,7 @@ const useStyles = makeStyles()((theme) => ({
     top: 0,
     width: 0,
     height: 0,
-    zIndex: 5,
+    zIndex: 2,
     pointerEvents: 'none',
     mixBlendMode: 'screen',
     opacity: 0.98,
