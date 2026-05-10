@@ -306,24 +306,24 @@ const addFusionLayers = () => {
         ['linear'],
         ['zoom'],
         6,
-        0.62,
+        0.95,
         11,
-        1.24,
+        1.7,
         14,
-        1.55,
+        2.15,
       ],
       'heatmap-radius': [
         'interpolate',
         ['linear'],
         ['zoom'],
         6,
-        42,
+        58,
         10,
-        74,
+        105,
         14,
-        118,
+        160,
       ],
-      'heatmap-opacity': 0.62,
+      'heatmap-opacity': 0.82,
       'heatmap-color': [
         'interpolate',
         ['linear'],
@@ -428,9 +428,9 @@ const addFusionLayers = () => {
         48,
         '#ff9a7c',
       ],
-      'line-width': 5.8,
-      'line-opacity': 0.18,
-      'line-blur': 2.2,
+      'line-width': 7.4,
+      'line-opacity': 0.24,
+      'line-blur': 2.6,
     },
   });
 
@@ -457,13 +457,13 @@ const addFusionLayers = () => {
         ['linear'],
         ['get', 'speed'],
         8,
-        1.15,
+        1.55,
         32,
-        1.8,
+        2.35,
         52,
-        2.4,
+        3.15,
       ],
-      'line-opacity': 0.78,
+      'line-opacity': 0.9,
       'line-blur': 0.25,
       'line-dasharray': [0.12, 2.4],
     },
@@ -759,7 +759,7 @@ const addFusionLayers = () => {
 const SenlayFusionMapLayer = ({ selectedPosition }) => {
   const { classes } = useStyles();
   const { rider, safety, gear } = useSmartSurfData();
-  const [enabled, setEnabled] = usePersistedState('smartsurfSenlayFusionEnabled', true);
+  const [enabled, setEnabled] = useState(true);
   const [layers, setLayers] = usePersistedState('smartsurfSenlayFusionLayers', layerDefaults);
   const [fusion, setFusion] = useState(null);
   const [loading, setLoading] = useState(false);
