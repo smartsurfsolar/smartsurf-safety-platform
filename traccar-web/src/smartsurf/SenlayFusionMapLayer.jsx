@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import {
   Box,
@@ -21,6 +21,7 @@ import SenlayWaterChat from './SenlayWaterChat';
 import {
   buildFusionFeatures,
   createFusionSuggestion,
+  destinationPoint,
   fallbackSenlayFusion,
   getFusionCenter,
   loadSenlayFusion,
@@ -52,6 +53,17 @@ const LAYERS = [
 ];
 
 const useStyles = makeStyles()((theme) => ({
+  canvasOverlay: {
+    position: 'fixed',
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+    zIndex: 5,
+    pointerEvents: 'none',
+    mixBlendMode: 'screen',
+    opacity: 0.98,
+  },
   panel: {
     position: 'absolute',
     left: `calc(${theme.dimensions.drawerWidthDesktop} + ${theme.spacing(3)})`,
@@ -187,6 +199,75 @@ const layerDefaults = {
   tides: true,
   temperature: true,
   gps: true,
+};
+
+const windColor = (speed, alpha = 0.84) => {
+  if (speed < 12) return `rgba(42, 132, 214, ${alpha})`;
+  if (speed < 22) return `rgba(38, 205, 164, ${alpha})`;
+  if (speed < 34) return `rgba(226, 230, 75, ${alpha})`;
+  if (speed < 48) return `rgba(255, 143, 59, ${alpha})`;
+  return `rgba(214, 65, 104, ${alpha})`;
+};
+
+const drawParticleLine = (ctx, x, y, angle, length, speed, alpha = 0.9) => {
+  const x1 = x - Math.cos(angle) * length * 0.55;
+  const y1 = y - Math.sin(angle) * length * 0.55;
+  const x2 = x + Math.cos(angle) * length * 0.45;
+  const y2 = y + Math.sin(angle) * length * 0.45;
+  const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+  gradient.addColorStop(0, 'rgba(255,255,255,0)');
+  gradient.addColorStop(0.42, windColor(speed, alpha * 0.44));
+  gradient.addColorStop(1, windColor(speed, alpha));
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = Math.max(1.8, Math.min(3.8, speed / 11));
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+};
+
+const toNumber = (value, fallback = null) => {
+  if (value === null || value === undefined || value === '') return fallback;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+};
+
+const sensorCoords = (item, center, bearing, distanceKm) => {
+  const lat = toNumber(item?.lat ?? item?.latitude);
+  const lon = toNumber(item?.lng ?? item?.lon ?? item?.longitude);
+  if (lat !== null && lon !== null) return { lat, lon };
+  const [offsetLon, offsetLat] = destinationPoint(center.lat, center.lon, distanceKm, bearing);
+  return { lat: offsetLat, lon: offsetLon };
+};
+
+const drawSensorPin = ({ ctx, x, y, label, color, nearest }) => {
+  ctx.save();
+  ctx.shadowColor = color;
+  ctx.shadowBlur = nearest ? 22 : 12;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, nearest ? 8 : 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = nearest ? 3 : 2;
+  ctx.stroke();
+  ctx.font = `${nearest ? 700 : 650} ${nearest ? 13 : 12}px Inter, system-ui, sans-serif`;
+  ctx.textBaseline = 'middle';
+  const width = ctx.measureText(label).width + 16;
+  ctx.fillStyle = 'rgba(7, 24, 39, .82)';
+  ctx.strokeStyle = 'rgba(255,255,255,.32)';
+  ctx.lineWidth = 1;
+  const boxX = x + 12;
+  const boxY = y - 15;
+  ctx.beginPath();
+  ctx.roundRect(boxX, boxY, width, 30, 9);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(label, boxX + 8, y);
+  ctx.restore();
 };
 
 const popupHtml = (feature) => {
@@ -759,6 +840,7 @@ const addFusionLayers = () => {
 const SenlayFusionMapLayer = ({ selectedPosition }) => {
   const { classes } = useStyles();
   const { rider, safety, gear } = useSmartSurfData();
+  const canvasRef = useRef(null);
   const [enabled, setEnabled] = useState(true);
   const [layers, setLayers] = usePersistedState('smartsurfSenlayFusionLayers', layerDefaults);
   const [fusion, setFusion] = useState(null);
@@ -861,6 +943,124 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
   }, [enabled]);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return () => {};
+    const ctx = canvas.getContext('2d');
+    let animationFrame = 0;
+    let frame = 0;
+
+    const resizeToMap = () => {
+      const mapCanvas = map.getCanvas();
+      const rect = mapCanvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.style.left = `${rect.left}px`;
+      canvas.style.top = `${rect.top}px`;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      const nextWidth = Math.max(1, Math.round(rect.width * ratio));
+      const nextHeight = Math.max(1, Math.round(rect.height * ratio));
+      if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+        canvas.width = nextWidth;
+        canvas.height = nextHeight;
+      }
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return rect;
+    };
+
+    const project = (lat, lon, rect) => {
+      const point = map.project([lon, lat]);
+      return { x: point.x, y: point.y, visible: point.x >= -80 && point.y >= -80 && point.x <= rect.width + 80 && point.y <= rect.height + 80 };
+    };
+
+    const drawSensors = (rect) => {
+      if (!layers.sensors || !fusion) return;
+      const windSensors = (fusion.windSensors || []).slice(0, 5);
+      const buoys = (fusion.buoys || []).slice(0, 3);
+
+      windSensors.forEach((sensor, index) => {
+        const coords = sensorCoords(sensor, center, 310 - index * 18, Math.min(4, 0.8 + index * 0.25));
+        const point = project(coords.lat, coords.lon, rect);
+        if (!point.visible) return;
+        const speed = toNumber(sensor.wind_speed_kmh, fusion.windKmh);
+        drawSensorPin({
+          ctx,
+          x: point.x,
+          y: point.y,
+          color: '#ffe98a',
+          nearest: index === 0,
+          label: index === 0 ? `Nearest wind ${Math.round(speed)} km/h` : `${Math.round(speed)} km/h`,
+        });
+      });
+
+      buoys.forEach((buoy, index) => {
+        const coords = sensorCoords(buoy, center, 110 + index * 20, Math.min(5, 1 + index * 0.35));
+        const point = project(coords.lat, coords.lon, rect);
+        if (!point.visible) return;
+        const wave = toNumber(buoy.wave_height_m, fusion.waveM);
+        drawSensorPin({
+          ctx,
+          x: point.x,
+          y: point.y,
+          color: '#7cb7ff',
+          nearest: index === 0,
+          label: index === 0 ? `Nearest waves ${wave.toFixed(1)} m` : `${wave.toFixed(1)} m`,
+        });
+      });
+    };
+
+    const draw = () => {
+      const rect = resizeToMap();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      if (enabled && fusion && layers.wind) {
+        const speed = fusion.windKmh || 0;
+        const gust = fusion.gustKmh || speed;
+        const flowBearing = ((fusion.windDirection || 0) + 180) % 360;
+        const angle = ((flowBearing - 90) * Math.PI) / 180;
+        const cell = Math.max(86, Math.min(138, rect.width / 10));
+        const time = frame / 26;
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (let y = -cell; y < rect.height + cell; y += cell * 0.78) {
+          for (let x = -cell; x < rect.width + cell; x += cell * 0.78) {
+            const wave = Math.sin(x * 0.006 + y * 0.004 + time) * 4;
+            const localSpeed = speed + wave + (gust - speed) * 0.14;
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, cell * 1.05);
+            gradient.addColorStop(0, windColor(localSpeed, 0.34));
+            gradient.addColorStop(0.58, windColor(localSpeed, 0.14));
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x - cell * 1.1, y - cell * 1.1, cell * 2.2, cell * 2.2);
+          }
+        }
+
+        const spacing = Math.max(58, Math.min(86, rect.width / 18));
+        const drift = (frame * (1.4 + Math.min(3.4, speed / 15))) % spacing;
+        for (let y = -spacing; y < rect.height + spacing; y += spacing) {
+          for (let x = -spacing; x < rect.width + spacing; x += spacing) {
+            const bend = Math.sin((x + frame * 4) * 0.01 + y * 0.012) * 0.22;
+            const px = x + Math.cos(angle) * drift + Math.sin(y * 0.02) * 18;
+            const py = y + Math.sin(angle) * drift + Math.cos(x * 0.015) * 16;
+            drawParticleLine(ctx, px, py, angle + bend, 28 + Math.min(44, speed * 1.3), speed, 0.88);
+          }
+        }
+        ctx.restore();
+      }
+
+      drawSensors(rect);
+      frame += 1;
+      animationFrame = window.requestAnimationFrame(draw);
+    };
+
+    animationFrame = window.requestAnimationFrame(draw);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+  }, [enabled, fusion, layers.wind, layers.sensors, center]);
+
+  useEffect(() => {
     if (!enabled) return () => {};
     const clickableLayers = [
       'smartsurf-senlay-sensors',
@@ -900,6 +1100,8 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
   const setLayer = (key, value) => setLayers({ ...layerDefaults, ...layers, [key]: value });
 
   return (
+    <>
+    <canvas ref={canvasRef} className={classes.canvasOverlay} aria-hidden="true" />
     <Paper className={classes.panel}>
       <Box className={classes.summaryBlock}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1}>
@@ -1009,6 +1211,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
         onSenlayPayload={(payload) => setFusion(normalizeSenlayPayload(payload))}
       />
     </Paper>
+    </>
   );
 };
 
