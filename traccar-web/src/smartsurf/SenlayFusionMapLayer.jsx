@@ -138,7 +138,7 @@ const useStyles = makeStyles()((theme) => ({
       gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))',
     },
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'repeat(4, max-content)',
+      gridTemplateColumns: 'repeat(5, max-content)',
       overflowX: 'auto',
       paddingBottom: theme.spacing(0.25),
     },
@@ -192,6 +192,7 @@ const useStyles = makeStyles()((theme) => ({
 
 const layerDefaults = {
   wind: true,
+  animation: false,
   swell: true,
   currents: true,
   terrain: true,
@@ -894,16 +895,16 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
     setVisible('smartsurf-senlay-source-links', layers.sensors);
     setVisible('smartsurf-senlay-source-link-arrows', layers.sensors);
     setVisible('smartsurf-senlay-wind-heat', layers.wind);
-    setVisible('smartsurf-senlay-wind-particles-glow', layers.wind);
-    setVisible('smartsurf-senlay-wind-particles', layers.wind);
+    setVisible('smartsurf-senlay-wind-particles-glow', layers.wind && layers.animation);
+    setVisible('smartsurf-senlay-wind-particles', layers.wind && layers.animation);
     setVisible('smartsurf-senlay-wind', layers.wind);
     setVisible('smartsurf-senlay-wind-arrows', layers.wind);
-    setVisible('smartsurf-senlay-sensor-wind', layers.wind && layers.sensors);
-    setVisible('smartsurf-senlay-sensor-wind-arrows', layers.wind && layers.sensors);
+    setVisible('smartsurf-senlay-sensor-wind', layers.wind && layers.sensors && layers.animation);
+    setVisible('smartsurf-senlay-sensor-wind-arrows', layers.wind && layers.sensors && layers.animation);
     setVisible('smartsurf-senlay-swell', layers.swell);
     setVisible('smartsurf-senlay-swell-arrows', layers.swell);
     setVisible('smartsurf-senlay-current', layers.currents);
-    setVisible('smartsurf-senlay-current-arrows', layers.currents);
+    setVisible('smartsurf-senlay-current-arrows', layers.currents && layers.animation);
     setVisible('smartsurf-senlay-terrain', layers.terrain);
     setVisible('smartsurf-senlay-sensor-halos', layers.sensors);
     setVisible('smartsurf-senlay-sensors', layers.sensors);
@@ -914,7 +915,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
   }, [enabled, layers, fusion]);
 
   useEffect(() => {
-    if (!enabled) return () => {};
+    if (!enabled || !layers.animation) return () => {};
     let frame = 0;
     const steps = [
       [0.12, 2.4],
@@ -940,7 +941,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
       }
     }, 420);
     return () => window.clearInterval(interval);
-  }, [enabled]);
+  }, [enabled, layers.animation]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1008,7 +1009,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
       });
     };
 
-    const draw = () => {
+    const draw = ({ animate = false } = {}) => {
       const rect = resizeToMap();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
@@ -1017,32 +1018,32 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
         const gust = fusion.gustKmh || speed;
         const flowBearing = ((fusion.windDirection || 0) + 180) % 360;
         const angle = ((flowBearing - 90) * Math.PI) / 180;
-        const cell = Math.max(86, Math.min(138, rect.width / 10));
-        const time = frame / 26;
+        const cell = Math.max(160, Math.min(260, rect.width / 6));
+        const time = animate ? frame / 26 : 0;
 
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
-        for (let y = -cell; y < rect.height + cell; y += cell * 0.78) {
-          for (let x = -cell; x < rect.width + cell; x += cell * 0.78) {
+        for (let y = -cell; y < rect.height + cell; y += cell * 1.12) {
+          for (let x = -cell; x < rect.width + cell; x += cell * 1.12) {
             const wave = Math.sin(x * 0.006 + y * 0.004 + time) * 4;
             const localSpeed = speed + wave + (gust - speed) * 0.14;
-            const gradient = ctx.createRadialGradient(x, y, 0, x, y, cell * 1.05);
-            gradient.addColorStop(0, windColor(localSpeed, 0.34));
-            gradient.addColorStop(0.58, windColor(localSpeed, 0.14));
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, cell * 1.18);
+            gradient.addColorStop(0, windColor(localSpeed, 0.22));
+            gradient.addColorStop(0.6, windColor(localSpeed, 0.08));
             gradient.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = gradient;
-            ctx.fillRect(x - cell * 1.1, y - cell * 1.1, cell * 2.2, cell * 2.2);
+            ctx.fillRect(x - cell * 1.2, y - cell * 1.2, cell * 2.4, cell * 2.4);
           }
         }
 
-        const spacing = Math.max(58, Math.min(86, rect.width / 18));
-        const drift = (frame * (1.4 + Math.min(3.4, speed / 15))) % spacing;
+        const spacing = Math.max(120, Math.min(180, rect.width / 9));
+        const drift = animate ? (frame * (0.9 + Math.min(2.2, speed / 20))) % spacing : 0;
         for (let y = -spacing; y < rect.height + spacing; y += spacing) {
           for (let x = -spacing; x < rect.width + spacing; x += spacing) {
-            const bend = Math.sin((x + frame * 4) * 0.01 + y * 0.012) * 0.22;
-            const px = x + Math.cos(angle) * drift + Math.sin(y * 0.02) * 18;
-            const py = y + Math.sin(angle) * drift + Math.cos(x * 0.015) * 16;
-            drawParticleLine(ctx, px, py, angle + bend, 28 + Math.min(44, speed * 1.3), speed, 0.88);
+            const bend = Math.sin((x + frame * 2) * 0.01 + y * 0.012) * 0.14;
+            const px = x + Math.cos(angle) * drift + Math.sin(y * 0.02) * 10;
+            const py = y + Math.sin(angle) * drift + Math.cos(x * 0.015) * 9;
+            drawParticleLine(ctx, px, py, angle + bend, 20 + Math.min(34, speed), speed, animate ? 0.72 : 0.42);
           }
         }
         ctx.restore();
@@ -1050,15 +1051,33 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
 
       drawSensors(rect);
       frame += 1;
-      animationFrame = window.requestAnimationFrame(draw);
     };
 
-    animationFrame = window.requestAnimationFrame(draw);
+    let lastFrame = 0;
+    const loop = (timestamp) => {
+      if (layers.animation && timestamp - lastFrame > 140) {
+        lastFrame = timestamp;
+        draw({ animate: true });
+      }
+      animationFrame = window.requestAnimationFrame(loop);
+    };
+    const redraw = () => draw({ animate: false });
+
+    redraw();
+    if (layers.animation) {
+      animationFrame = window.requestAnimationFrame(loop);
+    }
+    map.on('moveend', redraw);
+    map.on('zoomend', redraw);
+    window.addEventListener('resize', redraw);
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      map.off('moveend', redraw);
+      map.off('zoomend', redraw);
+      window.removeEventListener('resize', redraw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [enabled, fusion, layers.wind, layers.sensors, center]);
+  }, [enabled, fusion, layers.wind, layers.sensors, layers.animation, center]);
 
   useEffect(() => {
     if (!enabled) return () => {};
@@ -1166,6 +1185,7 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
         <Box className={classes.layerGrid}>
           {Object.entries({
             wind: 'Wind flow',
+            animation: 'Animation',
             swell: 'Swell',
             currents: 'Currents',
             tides: 'Tides',
