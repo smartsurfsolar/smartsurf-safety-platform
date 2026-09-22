@@ -86,13 +86,22 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 const promptChips = [
+  'When is the best surf window today?',
+  'What tide stage should I wait for?',
   'Is this beach safe for kitesurfing right now?',
-  'What kite should I choose with my profile and gear?',
-  'Which sensor should I trust most on this map?',
   'What are the no-go risks for this session?',
 ];
 
-const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => {
+const sportField = (rider) =>
+  ({
+    kitesurf: 'kitesurfing',
+    kitefoil: 'kitefoiling',
+    wingfoil: 'wingfoiling',
+    surf: 'surfing',
+    sup: 'sup',
+  })[rider.sportMode || (rider.ridingStyle === 'surf' ? 'surf' : '')] || 'watersports';
+
+const SenlayWaterChat = ({ open, onClose, center, fusion, forecast, onSenlayPayload }) => {
   const { classes, cx } = useStyles();
   const { rider, safety, gear } = useSmartSurfData();
   const [messages, setMessages] = useState([]);
@@ -104,8 +113,11 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
     const sourceText = fusion?.nearestWindSensor
       ? `Nearest wind sensor: ${fusion.nearestWindSensor.name || fusion.nearestWindSensor.station_id} (${fusion.nearestWindSensor.distance_km} km).`
       : 'No nearby hardware wind sensor is selected yet; Senlay will still check model and available source data.';
-    return `Senlay AI is tuned for kitesurfing and watersports at ${center.label}. ${sourceText}`;
-  }, [center.label, fusion]);
+    const forecastText = forecast
+      ? `Forecast loaded: ${forecast.activeModelCount} active model sources. Tide: ${forecast.tidePrediction?.stage || 'unknown'} from ${forecast.tidePrediction?.source || 'unknown source'}.`
+      : 'Forecast is still loading for this chat.';
+    return `Senlay AI is tuned for surfing, kitesurfing, and watersports at ${center.label}. ${sourceText} ${forecastText}`;
+  }, [center.label, forecast, fusion]);
 
   useEffect(() => {
     if (open && !messages.length) {
@@ -127,7 +139,7 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
     setMessages(nextMessages);
     setLoading(true);
     try {
-      const composed = `${buildSafetyPromptContext({ rider, safety, gear, fusion })}\n\nUser question:\n${text}`;
+      const composed = `${buildSafetyPromptContext({ rider, safety, gear, fusion, forecast })}\n\nUser question:\n${text}`;
       const response = await fetch('/senlay-api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -137,11 +149,12 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
           lat: center.lat,
           lng: center.lon,
           units: rider.windUnits === 'knots' ? 'knots' : 'metric',
-          field: 'kitesurfing',
+          field: sportField(rider),
         }),
       });
       const data = await response.json();
-      if (!response.ok || data.error) throw new Error(data.error || `Senlay AI returned ${response.status}`);
+      if (!response.ok || data.error)
+        throw new Error(data.error || `Senlay AI returned ${response.status}`);
       if (data.sensors) {
         onSenlayPayload?.({
           sensors: data.sensors,
@@ -150,9 +163,15 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
           active_sources: data.active_sources,
         });
       }
-      setMessages([...nextMessages, { role: 'assistant', content: data.answer || 'No answer returned.' }]);
+      setMessages([
+        ...nextMessages,
+        { role: 'assistant', content: data.answer || 'No answer returned.' },
+      ]);
     } catch (error) {
-      setMessages([...nextMessages, { role: 'assistant', content: `Senlay AI error: ${error.message}` }]);
+      setMessages([
+        ...nextMessages,
+        { role: 'assistant', content: `Senlay AI error: ${error.message}` },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -163,10 +182,15 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
       <Box className={classes.header}>
         <Stack direction="row" justifyContent="space-between" alignItems="flex-start" gap={2}>
           <Box>
-            <Typography variant="overline" color="secondary">Senlay AI</Typography>
-            <Typography variant="h5" sx={{ fontWeight: 900 }}>Watersports decision chat</Typography>
+            <Typography variant="overline" color="secondary">
+              Senlay AI
+            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: 900 }}>
+              Watersports decision chat
+            </Typography>
             <Typography sx={{ mt: 0.5, color: '#b9cee1' }}>
-              Ask about the live map, sensor sources, wind, swell, tides, currents, gear, and session risk.
+              Ask about the live map, sensor sources, wind, swell, tides, currents, gear, and
+              session risk.
             </Typography>
           </Box>
           <IconButton color="inherit" onClick={onClose}>
@@ -174,7 +198,9 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
           </IconButton>
         </Stack>
       </Box>
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, minHeight: 0 }}>
+      <DialogContent
+        sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, minHeight: 0 }}
+      >
         <Stack direction="row" gap={1} sx={{ flexWrap: 'wrap' }}>
           {promptChips.map((prompt) => (
             <Chip
@@ -225,7 +251,12 @@ const SenlayWaterChat = ({ open, onClose, center, fusion, onSenlayPayload }) => 
               }
             }}
           />
-          <Button variant="contained" color="secondary" onClick={() => send()} disabled={loading || !input.trim()}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => send()}
+            disabled={loading || !input.trim()}
+          >
             <SendIcon />
           </Button>
         </Stack>

@@ -1,4 +1,4 @@
-export const SMARTSURF_SAFETY_CONTEXT_VERSION = '1.0';
+export const SMARTSURF_SAFETY_CONTEXT_VERSION = '1.1';
 
 export const hazardClasses = [
   'land_phase_power_control',
@@ -70,31 +70,30 @@ const includesAny = (text, tokens) => {
   return tokens.some((token) => normalized.includes(token));
 };
 
-const skillRank = (skillLevel) => ({
-  beginner: 1,
-  independent: 2,
-  intermediate: 3,
-  advanced: 4,
-  instructor: 5,
-  rescue_station_staff: 5,
-  pro: 6,
-}[skillLevel] || 3);
+const skillRank = (skillLevel) =>
+  ({
+    beginner: 1,
+    independent: 2,
+    intermediate: 3,
+    advanced: 4,
+    instructor: 5,
+    rescue_station_staff: 5,
+    pro: 6,
+  })[skillLevel] || 3;
 
-const getAlertText = (alert) => [
-  alert?.event,
-  alert?.headline,
-  alert?.title,
-  alert?.description,
-  alert?.severity,
-].filter(Boolean).join(' ');
+const getAlertText = (alert) =>
+  [alert?.event, alert?.headline, alert?.title, alert?.description, alert?.severity]
+    .filter(Boolean)
+    .join(' ');
 
 const hasWeatherHardStop = (conditions = {}) => {
   const alertText = asArray(conditions.weatherAlerts).map(getAlertText).join(' ');
-  return boolish(conditions.specialMarineWarning)
-    || boolish(conditions.waterspoutRisk)
-    || boolish(conditions.thunderHeard)
-    || includesAny(conditions.lightningRisk, ['high', 'severe', 'detected', 'true'])
-    || includesAny(alertText, [
+  return (
+    boolish(conditions.specialMarineWarning) ||
+    boolish(conditions.waterspoutRisk) ||
+    boolish(conditions.thunderHeard) ||
+    includesAny(conditions.lightningRisk, ['high', 'severe', 'detected', 'true']) ||
+    includesAny(alertText, [
       'special marine warning',
       'lightning',
       'thunder',
@@ -103,7 +102,8 @@ const hasWeatherHardStop = (conditions = {}) => {
       'gale warning',
       'storm warning',
       'squall',
-    ]);
+    ])
+  );
 };
 
 const hasEmergencyContact = (safety = {}) =>
@@ -113,7 +113,9 @@ const activeKites = (gear = {}) =>
   asArray(gear.kites).filter((kite) => kite.active !== false && numberOrNull(kite.sizeM2));
 
 const activeBoards = (gear = {}) =>
-  asArray(gear.boards).filter((board) => board.active !== false && (board.boardType || board.model));
+  asArray(gear.boards).filter(
+    (board) => board.active !== false && (board.boardType || board.model),
+  );
 
 const addUnique = (target, value) => {
   if (value && !target.includes(value)) target.push(value);
@@ -140,10 +142,16 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
   const topHazards = [];
   const uncertaintyNotes = [];
 
-  if (!rider.sportMode) addUnique(missingCriticalData, 'Sport mode is not saved; SmartSurf assumes kitesurfing.');
-  if (!rider.weightKg) addUnique(missingCriticalData, 'Rider weight is missing, so kite recommendation confidence is lower.');
+  if (!rider.sportMode)
+    addUnique(missingCriticalData, 'Sport mode is not saved; SmartSurf assumes kitesurfing.');
+  if (!rider.weightKg)
+    addUnique(
+      missingCriticalData,
+      'Rider weight is missing, so kite recommendation confidence is lower.',
+    );
   if (!rider.yearsExperience) addUnique(missingCriticalData, 'Years of experience are missing.');
-  if (!safety.swimmingLevel && !rider.swimmingConfidence) addUnique(missingCriticalData, 'Swimming confidence is not saved.');
+  if (!safety.swimmingLevel && !rider.swimmingConfidence)
+    addUnique(missingCriticalData, 'Swimming confidence is not saved.');
   if (!hasEmergencyContact(safety)) addUnique(missingCriticalData, 'Emergency contact is missing.');
 
   if (['kitesurf', 'kitefoil', 'wingfoil'].includes(sportMode) && !activeKites(gear).length) {
@@ -152,10 +160,17 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
   if (!activeBoards(gear).length) addUnique(missingCriticalData, 'Board profile is not saved.');
 
   if (hasWeatherHardStop(conditions)) {
-    addUnique(hardStops, 'Thunder, lightning, waterspout, storm, or special marine warning is present.');
+    addUnique(
+      hardStops,
+      'Thunder, lightning, waterspout, storm, or special marine warning is present.',
+    );
     addUnique(topHazards, 'convective_weather_intrusion');
   }
-  if (boolish(conditions.beachRedFlag) || boolish(conditions.beachWaterClosed) || boolish(conditions.localNoEntryNotice)) {
+  if (
+    boolish(conditions.beachRedFlag) ||
+    boolish(conditions.beachWaterClosed) ||
+    boolish(conditions.localNoEntryNotice)
+  ) {
     addUnique(hardStops, 'Local flag or official notice says no water entry.');
     addUnique(topHazards, 'official_override');
   }
@@ -186,11 +201,25 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
     addUnique(topHazards, 'lofting_or_dragging');
   }
 
-  if (boolish(conditions.orangeWindsock) || boolish(conditions.offshoreWindWarning) || boolish(conditions.offshoreWindRisk)) {
-    if (safety.stationSharingEnabled || rider.buddyStatus === 'school' || rider.buddyStatus === 'lifeguarded') {
-      addUnique(cautions, 'Offshore or strong-wind warning exists; stay inside station/rescue coverage.');
+  if (
+    boolish(conditions.orangeWindsock) ||
+    boolish(conditions.offshoreWindWarning) ||
+    boolish(conditions.offshoreWindRisk)
+  ) {
+    if (
+      safety.stationSharingEnabled ||
+      rider.buddyStatus === 'school' ||
+      rider.buddyStatus === 'lifeguarded'
+    ) {
+      addUnique(
+        cautions,
+        'Offshore or strong-wind warning exists; stay inside station/rescue coverage.',
+      );
     } else {
-      addUnique(hardStops, 'Offshore or strong-wind warning exists without confirmed local support.');
+      addUnique(
+        hardStops,
+        'Offshore or strong-wind warning exists without confirmed local support.',
+      );
     }
     addUnique(topHazards, 'offshore_drift');
   }
@@ -204,7 +233,10 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
   }
 
   if (waveM !== null && wavePeriodS !== null && waveM > 0.9 && wavePeriodS >= 10) {
-    addUnique(cautions, 'Longer-period swell can carry more energy than wave height alone suggests.');
+    addUnique(
+      cautions,
+      'Longer-period swell can carry more energy than wave height alone suggests.',
+    );
     addUnique(topHazards, 'impact_zone_hold_down');
   }
 
@@ -214,7 +246,10 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
   }
 
   if (waterTemperatureC !== null && waterTemperatureC < 18 && (!wetsuitMm || wetsuitMm < 3)) {
-    addUnique(cautions, 'Cold water or insufficient thermal protection reduces the self-rescue window.');
+    addUnique(
+      cautions,
+      'Cold water or insufficient thermal protection reduces the self-rescue window.',
+    );
     addUnique(topHazards, 'cold_water_or_fatigue');
   }
 
@@ -231,13 +266,20 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
     addUnique(topHazards, 'low_visibility_or_daylight_overrun');
   }
 
-  if (['kitesurf', 'kitefoil', 'wingfoil'].includes(sportMode) && !boolish(rider.selfRescueCompetent) && skill <= 3) {
+  if (
+    ['kitesurf', 'kitefoil', 'wingfoil'].includes(sportMode) &&
+    !boolish(rider.selfRescueCompetent) &&
+    skill <= 3
+  ) {
     addUnique(cautions, 'Self-rescue competence is not confirmed for this rider profile.');
     addUnique(topHazards, 'equipment_or_board_separation');
   }
 
   if (['solo', '', undefined].includes(rider.buddyStatus) && !hasEmergencyContact(safety)) {
-    addUnique(cautions, 'Solo session without a trusted contact leaves no private escalation path.');
+    addUnique(
+      cautions,
+      'Solo session without a trusted contact leaves no private escalation path.',
+    );
     addUnique(topHazards, 'responder_needed_event');
   }
 
@@ -251,13 +293,19 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
       addUnique(cautions, 'Quick-release check is not saved for this gear setup.');
       addUnique(topHazards, 'land_phase_power_control');
     }
-    if (!boolish(safetyEquipment.knife) && (gustFactor > 1.6 || boolish(conditions.offshoreWindRisk))) {
+    if (
+      !boolish(safetyEquipment.knife) &&
+      (gustFactor > 1.6 || boolish(conditions.offshoreWindRisk))
+    ) {
       addUnique(cautions, 'Hook knife is not saved for a higher-risk kite setup.');
     }
   }
 
   if (sourceCount !== null && sourceCount < 4) {
-    addUnique(uncertaintyNotes, 'Low source density: confirm with local observation before launch.');
+    addUnique(
+      uncertaintyNotes,
+      'Low source density: confirm with local observation before launch.',
+    );
   }
   if (!conditions.sourceFreshness) {
     addUnique(uncertaintyNotes, 'Source freshness is missing.');
@@ -285,15 +333,73 @@ export const evaluateResearchSafety = ({ rider = {}, safety = {}, gear = {}, con
   };
 };
 
-export const buildSafetyPromptContext = ({ rider = {}, safety = {}, gear = {}, fusion = null }) => {
+const promptValue = (value, suffix = '') =>
+  value === null || value === undefined || value === '' ? 'unknown' : `${value}${suffix}`;
+
+const forecastPromptLines = (forecast) => {
+  if (!forecast) {
+    return [
+      'Forecast context: NOT LOADED in this chat payload.',
+      'Forecast/tide access rule: only say forecast or tide is unavailable when Forecast context is NOT LOADED or the relevant source is explicitly marked unavailable.',
+    ];
+  }
+  const activeModels = (forecast.providerModels || [])
+    .filter((model) => model.status === 'active')
+    .map((model) => model.name)
+    .join(', ');
+  const unavailableModels = (forecast.providerModels || [])
+    .filter((model) => model.status !== 'active')
+    .map((model) => model.name)
+    .join(', ');
+  const tide = forecast.tidePrediction;
+  const staticProfile = tide?.staticProfile;
+  const best = forecast.bestWindow
+    ? `${forecast.bestWindow.label} ${forecast.bestWindow.status}, wind ${promptValue(forecast.bestWindow.windKmh, ' km/h')}, gusts ${promptValue(forecast.bestWindow.gustKmh, ' km/h')}, waves ${promptValue(forecast.bestWindow.waveM, ' m')}, tide ${forecast.bestWindow.tideStage || 'unknown'}`
+    : 'no best window';
+  const next = forecast.nextWindow
+    ? `${forecast.nextWindow.label} ${forecast.nextWindow.status}, wind ${promptValue(forecast.nextWindow.windKmh, ' km/h')}, gusts ${promptValue(forecast.nextWindow.gustKmh, ' km/h')}, waves ${promptValue(forecast.nextWindow.waveM, ' m')}, spread ${promptValue(forecast.nextWindow.spreadKmh, ' km/h')}`
+    : 'no next window';
+  const tideLine = tide
+    ? `Tide prediction: source ${tide.source}, confidence ${Math.round((tide.confidence || 0) * 100)}%, current ${promptValue(tide.currentLevelM, ' m MSL')}, stage ${tide.stage || 'unknown'}, trend ${tide.trend || 'unknown'}, next high ${tide.nextHigh?.label || tide.nextHigh?.time || 'unknown'}, next low ${tide.nextLow?.label || tide.nextLow?.time || 'unknown'}. ${tide.summary || ''}`
+    : 'Tide prediction: not available in forecast object.';
+  const staticLine = staticProfile
+    ? `Static tide profile: ${staticProfile.name}, source ${staticProfile.source}, preferred surf stages ${staticProfile.preferredSurfStages.join(', ')}, avoid ${staticProfile.avoidStages.join(', ')}, confidence ${Math.round((staticProfile.confidence || 0) * 100)}%.`
+    : 'Static tide profile: not attached.';
+
+  return [
+    `Forecast context: AVAILABLE, generated ${forecast.generatedAt || 'unknown'}, active models ${forecast.activeModelCount ?? 'unknown'}, unavailable models ${forecast.unavailableModelCount ?? 'unknown'}.`,
+    `Forecast summary: ${forecast.summary || 'not summarized'}`,
+    `Best forecast window: ${best}.`,
+    `Next forecast window: ${next}.`,
+    tideLine,
+    staticLine,
+    `Provider models active: ${activeModels || 'none'}. Provider models unavailable: ${unavailableModels || 'none'}. Marine model: ${forecast.marineModel?.name || 'unknown'} ${forecast.marineModel?.status || 'unknown'}.`,
+    `Tracker history: ${forecast.history?.summary || 'unavailable'}`,
+    'Forecast/tide access rule: Forecast context is AVAILABLE, so do not say you lack access to forecast or tide. State the source and confidence. If the tide source is static profile, call it static and lower confidence. If the user asks about wave surfing, prioritize wave height, period, wind texture, tide stage, and the static spot tide profile over kite-size or wind-powered recommendations.',
+  ];
+};
+
+export const buildSafetyPromptContext = ({
+  rider = {},
+  safety = {},
+  gear = {},
+  fusion = null,
+  forecast = null,
+}) => {
   const evaluation = evaluateResearchSafety({
     rider,
     safety,
     gear,
     conditions: fusion || {},
   });
-  const kites = activeKites(gear).map((kite) => `${kite.sizeM2}m`).join(', ') || 'not saved';
-  const boards = activeBoards(gear).map((board) => board.boardType || board.model || 'board').join(', ') || 'not saved';
+  const kites =
+    activeKites(gear)
+      .map((kite) => `${kite.sizeM2}m`)
+      .join(', ') || 'not saved';
+  const boards =
+    activeBoards(gear)
+      .map((board) => board.boardType || board.model || 'board')
+      .join(', ') || 'not saved';
   const emergencyReady = hasEmergencyContact(safety) ? 'configured' : 'missing';
   const weatherLine = fusion
     ? `Live context: wind ${Math.round(fusion.windKmh || 0)} km/h, gusts ${Math.round(fusion.gustKmh || 0)} km/h, waves ${Number(fusion.waveM || 0).toFixed(1)} m, swell ${Number(fusion.swellM || 0).toFixed(1)} m, water ${fusion.waterTemperatureC ?? 'unknown'} C, confidence ${Math.round((fusion.confidence || 0.5) * 100)}%.`
@@ -306,10 +412,17 @@ export const buildSafetyPromptContext = ({ rider = {}, safety = {}, gear = {}, f
     `Safety: emergency contact ${emergencyReady}, local safety network ${safety.localSafetyNetworkEnabled ? 'enabled' : 'off'}, station sharing ${safety.stationSharingEnabled ? 'enabled' : 'off'}.`,
     `Gear: kites ${kites}; boards ${boards}; helmet ${gear.safetyEquipment?.helmet ? 'yes' : 'no'}; impact vest ${gear.safetyEquipment?.impactVest ? 'yes' : 'no'}; knife ${gear.safetyEquipment?.knife ? 'yes' : 'no'}; wetsuit ${gear.safetyEquipment?.wetsuitMm || 'unknown'} mm.`,
     weatherLine,
+    ...forecastPromptLines(forecast),
     `Decision hint: ${evaluation.decisionStateHint}.`,
-    evaluation.hardStops.length ? `Hard stops: ${evaluation.hardStops.join(' | ')}` : 'Hard stops: none detected from current data.',
-    evaluation.cautions.length ? `Cautions: ${evaluation.cautions.join(' | ')}` : 'Cautions: none detected from current data.',
-    evaluation.missingCriticalData.length ? `Missing critical data: ${evaluation.missingCriticalData.join(' | ')}` : 'Missing critical data: none.',
+    evaluation.hardStops.length
+      ? `Hard stops: ${evaluation.hardStops.join(' | ')}`
+      : 'Hard stops: none detected from current data.',
+    evaluation.cautions.length
+      ? `Cautions: ${evaluation.cautions.join(' | ')}`
+      : 'Cautions: none detected from current data.',
+    evaluation.missingCriticalData.length
+      ? `Missing critical data: ${evaluation.missingCriticalData.join(' | ')}`
+      : 'Missing critical data: none.',
     `Top hazards: ${evaluation.topHazards.join(', ')}.`,
     `AI response contract: ${aiResponseContract.join(' ')}`,
     `Hard-stop rules: ${hardStopRules.join(' ')}`,

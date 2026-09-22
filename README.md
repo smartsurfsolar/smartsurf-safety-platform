@@ -13,6 +13,7 @@ SmartSurf combines:
 - rider profile, gear profile, and safety profile
 - semantic device mapping for rider, board, helmet, school fleet, or future SmartSurf tracker
 - Senlay Fusion environmental context for wind, gusts, waves, currents, tides, terrain, source freshness, and confidence
+- multi-model forecast prediction using recent Traccar history plus provider forecasts
 - pre-session "Can I ride now?" assessment
 - safety context model for hard stops, caution rules, and incident escalation
 - Local Safety Network foundation for opted-in rider/station awareness
@@ -41,6 +42,7 @@ Official upstream references used for this build:
 - gear profile
 - SmartSurf semantic device mapping
 - Senlay conditions panel
+- forecast prediction and model comparison
 - pre-session assessment
 - session model foundation
 - incident/SOS model foundation
@@ -129,6 +131,7 @@ Prepared tables:
 - `smartsurf_tracking_devices`
 - `smartsurf_spots`
 - `smartsurf_sessions`
+- `smartsurf_forecast_snapshots`
 - `smartsurf_incidents`
 
 ## Senlay Integration
@@ -142,6 +145,21 @@ The SmartSurf Conditions page calls:
 The reverse proxy should forward that path to the Senlay API base URL for the target environment.
 
 This keeps the browser from needing a Senlay API key in the first MVP. Later, a backend SmartSurf service should call Senlay using server-side credentials and store snapshots with sessions/incidents.
+
+## Forecast Prediction
+
+The map and Conditions page now compute a first SmartSurf forecast prediction from:
+
+- recent Traccar route history for the selected tracker
+- Senlay live physical context
+- Open-Meteo Best Match forecast
+- NOAA GFS / HRRR forecast through Open-Meteo
+- ECMWF IFS / AIFS forecast through Open-Meteo
+- Open-Meteo Marine wave and swell forecast
+- Open-Meteo Marine sea-level height history/forecast as a tide proxy when no tide gauge is present
+- static local tide/surf-stage profiles as a low-confidence fallback when live tide data is unavailable
+
+The frontend calculates model spread, a best riding window, a next-window risk state, tide trend/stage, static tide guidance, and a tracker-history adjustment. The chat prompt receives the same forecast object so the visiting agent can state the provider and tide source instead of claiming no forecast access. The `smartsurf_forecast_snapshots` table is prepared for the later backend step where forecasts should be generated server-side and persisted with sessions/incidents.
 
 ## First Run
 
@@ -219,6 +237,7 @@ To move to another server:
 - SmartSurf data is currently stored in Traccar user attributes in the UI.
 - The `smartsurf_` database tables are ready but need a small backend API layer to become authoritative.
 - Senlay Conditions uses `/senlay-api/pwm` and falls back to a safe mock if proxy is not connected.
+- Forecast providers are called from the browser in the MVP; production should move provider aggregation to the backend snapshot service.
 - Direct browser refresh on nested React routes should be handled by the public reverse proxy. Open the app from `/` until the nginx domain config is active.
 - Auto-SOS detection is represented as a model and UI foundation; live detection from Traccar position streams is the next backend task.
 - Local Safety Network is opt-in model/UI foundation only, not public broadcast.

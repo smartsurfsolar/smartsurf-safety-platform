@@ -1,6 +1,7 @@
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { toArray } from './domain';
+import { forecastModelLabels } from './forecastModels';
 
 const useStyles = makeStyles()((theme) => ({
   feed: {
@@ -109,7 +110,8 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-const sourceBadge = (source) => source?.mode === 'hardware_with_model_fallback' ? 'HARDWARE-FIRST' : 'MODEL';
+const sourceBadge = (source) =>
+  source?.mode === 'hardware_with_model_fallback' ? 'HARDWARE-FIRST' : 'MODEL';
 
 const sourceSummary = (sourceInfo) => {
   if (!sourceInfo || sourceInfo.mode === 'model_only') {
@@ -126,8 +128,10 @@ const sourceSummary = (sourceInfo) => {
   return `Hardware-first${fields ? ` for ${fields}` : ''} via ${name}${distance}`;
 };
 
-const fmt = (value, suffix = '') => (value === null || value === undefined || Number.isNaN(Number(value)) ? '--' : `${value}${suffix}`);
-const fmtRound = (value, suffix = '') => (value === null || value === undefined || Number.isNaN(Number(value)) ? '--' : `${Math.round(Number(value) * 10) / 10}${suffix}`);
+const fmtRound = (value, suffix = '') =>
+  value === null || value === undefined || Number.isNaN(Number(value))
+    ? '--'
+    : `${Math.round(Number(value) * 10) / 10}${suffix}`;
 
 const Section = ({ title, badge, children }) => {
   const { classes, cx } = useStyles();
@@ -135,7 +139,13 @@ const Section = ({ title, badge, children }) => {
     <Box className={classes.section}>
       <Box className={classes.titleRow}>
         <Typography className={classes.title}>{title}</Typography>
-        {badge && <Chip size="small" label={badge} className={cx(classes.modelBadge, badge.includes('HARDWARE') && classes.badge)} />}
+        {badge && (
+          <Chip
+            size="small"
+            label={badge}
+            className={cx(classes.modelBadge, badge.includes('HARDWARE') && classes.badge)}
+          />
+        )}
       </Box>
       {children}
     </Box>
@@ -162,18 +172,18 @@ const freshnessLabel = (value) => {
   return `Data fetched ${Math.round(minutes / 60)}h ago`;
 };
 
-const SenlayContextFeed = ({ fusion }) => {
+const SenlayContextFeed = ({ fusion, forecast }) => {
   const { classes } = useStyles();
   if (!fusion) return null;
 
   const atmosphere = fusion.layers?.atmosphere?.current || {};
   const atmosphereSource = fusion.layers?.atmosphere?.current_source;
-  const hydrosphere = fusion.layers?.hydrosphere?.current || {};
   const hydrosphereSource = fusion.layers?.hydrosphere?.current_source;
   const terrain = fusion.layers?.terrain || {};
   const satellite = fusion.satellite || fusion.raw?.satellite;
   const windSensors = toArray(fusion.windSensors);
   const buoys = toArray(fusion.buoys);
+  const modelLabels = forecastModelLabels(forecast);
 
   return (
     <Box className={classes.feed}>
@@ -183,36 +193,96 @@ const SenlayContextFeed = ({ fusion }) => {
       </Box>
       <Box className={classes.body}>
         <Section title="Atmosphere" badge={sourceBadge(atmosphereSource)}>
-          <Row label="Wind">{fmtRound(fusion.windKmh, ' km/h')} from {fmtRound(fusion.windDirection, ' deg')} (gusts {fmtRound(fusion.gustKmh)})</Row>
-          <Row label="Temperature">{fmtRound(fusion.temperatureC, ' C')}{atmosphere.apparent_temperature != null ? ` (feels ${fmtRound(atmosphere.apparent_temperature, ' C')})` : ''}</Row>
+          <Row label="Wind">
+            {fmtRound(fusion.windKmh, ' km/h')} from {fmtRound(fusion.windDirection, ' deg')} (gusts{' '}
+            {fmtRound(fusion.gustKmh)})
+          </Row>
+          <Row label="Temperature">
+            {fmtRound(fusion.temperatureC, ' C')}
+            {atmosphere.apparent_temperature != null
+              ? ` (feels ${fmtRound(atmosphere.apparent_temperature, ' C')})`
+              : ''}
+          </Row>
           <Row label="Reading">Pressure {fmtRound(fusion.pressure, ' hPa')}</Row>
-          <Row label="Detecting">Humidity {fmtRound(fusion.humidity, '%')} | Clouds {fmtRound(atmosphere.cloud_cover, '%')}</Row>
+          <Row label="Detecting">
+            Humidity {fmtRound(fusion.humidity, '%')} | Clouds{' '}
+            {fmtRound(atmosphere.cloud_cover, '%')}
+          </Row>
           <Row label="Source">{sourceSummary(atmosphereSource)}</Row>
         </Section>
 
         <Section title="Hydrosphere" badge={sourceBadge(hydrosphereSource)}>
-          <Row label="Waves">{fmtRound(fusion.waveM, ' m')} ({fmtRound(fusion.wavePeriodS, 's')} period)</Row>
-          <Row label="Swell">{fmtRound(fusion.swellM, ' m')} from {fmtRound(fusion.swellDirection, ' deg')}</Row>
-          <Row label="Current">{fmtRound(fusion.currentSpeed)} signal toward {fmtRound(fusion.currentDirection, ' deg')}</Row>
-          {fusion.waterTemperatureC != null && <Row label="Water">{fmtRound(fusion.waterTemperatureC, ' C')}</Row>}
+          <Row label="Waves">
+            {fmtRound(fusion.waveM, ' m')} ({fmtRound(fusion.wavePeriodS, 's')} period)
+          </Row>
+          <Row label="Swell">
+            {fmtRound(fusion.swellM, ' m')} from {fmtRound(fusion.swellDirection, ' deg')}
+          </Row>
+          <Row label="Current">
+            {fmtRound(fusion.currentSpeed)} signal toward{' '}
+            {fmtRound(fusion.currentDirection, ' deg')}
+          </Row>
+          {fusion.waterTemperatureC != null && (
+            <Row label="Water">{fmtRound(fusion.waterTemperatureC, ' C')}</Row>
+          )}
           <Row label="Source">{sourceSummary(hydrosphereSource)}</Row>
         </Section>
 
+        {forecast && (
+          <Section title="Forecast Prediction" badge="MULTI-MODEL">
+            <Row label="Best">
+              {forecast.bestWindow
+                ? `${forecast.bestWindow.label} ${forecast.bestWindow.status}, wind ${fmtRound(forecast.bestWindow.windKmh, ' km/h')}, gusts ${fmtRound(forecast.bestWindow.gustKmh, ' km/h')}`
+                : 'No provider window available'}
+            </Row>
+            <Row label="Next">
+              {forecast.nextWindow
+                ? `${forecast.nextWindow.label} ${forecast.nextWindow.status}, waves ${fmtRound(forecast.nextWindow.waveM, ' m')}, spread ${fmtRound(forecast.nextWindow.spreadKmh, ' km/h')}`
+                : 'Waiting for providers'}
+            </Row>
+            <Row label="Tide">
+              {forecast.tidePrediction?.summary ||
+                'No tide gauge or sea-level proxy available yet.'}
+            </Row>
+            <Row label="History">{forecast.history?.summary || 'Tracker history unavailable.'}</Row>
+            <Row label="Models">
+              {modelLabels.length
+                ? modelLabels
+                    .map(
+                      (model) =>
+                        `${model.name}: ${model.status === 'active' ? model.detail : 'off'}`,
+                    )
+                    .join(' | ')
+                : 'No provider models loaded'}
+            </Row>
+          </Section>
+        )}
+
         <Section title="Terrain" badge="MODEL">
           <Row label="Terrain">
-            {terrain.is_ocean ? `Depth ${fmtRound(Math.abs(terrain.elevation_at_point), ' m')}` : `Elevation ${fmtRound(terrain.elevation_at_point ?? fusion.terrainMeters, ' m')}`}
+            {terrain.is_ocean
+              ? `Depth ${fmtRound(Math.abs(terrain.elevation_at_point), ' m')}`
+              : `Elevation ${fmtRound(terrain.elevation_at_point ?? fusion.terrainMeters, ' m')}`}
           </Row>
           {toArray(terrain.depth_profile).length > 0 && (
-            <Row label="Profile">{terrain.depth_profile.map((value) => fmtRound(value, 'm')).join(', ')}</Row>
+            <Row label="Profile">
+              {terrain.depth_profile.map((value) => fmtRound(value, 'm')).join(', ')}
+            </Row>
           )}
         </Section>
 
-        {(windSensors.length > 0 || buoys.length > 0 || fusion.tides || fusion.nearestWaterTemperature) && (
+        {(windSensors.length > 0 ||
+          buoys.length > 0 ||
+          fusion.tides ||
+          fusion.nearestWaterTemperature) && (
           <Section title="Nearest Sources" badge="HARDWARE">
             {windSensors.slice(0, 2).map((sensor) => (
               <Row key={`${sensor.source}-${sensor.station_id || sensor.name}`} label="Wind">
-                {sensor.name || sensor.station_id} - {fmtRound(sensor.distance_km, ' km')} | {fmtRound(sensor.wind_speed_kmh, ' km/h')}
-                {sensor.wind_direction != null ? ` from ${fmtRound(sensor.wind_direction, ' deg')}` : ''}
+                {sensor.name || sensor.station_id} - {fmtRound(sensor.distance_km, ' km')} |{' '}
+                {fmtRound(sensor.wind_speed_kmh, ' km/h')}
+                {sensor.wind_direction != null
+                  ? ` from ${fmtRound(sensor.wind_direction, ' deg')}`
+                  : ''}
               </Row>
             ))}
             {buoys.slice(0, 2).map((buoy) => (
@@ -222,20 +292,31 @@ const SenlayContextFeed = ({ fusion }) => {
               </Row>
             ))}
             {fusion.tides && (
-              <Row label="Tide">{fusion.tides.name || fusion.tides.station_id} - level {fmtRound(fusion.tideLevelM, ' m')}</Row>
+              <Row label="Tide">
+                {fusion.tides.name || fusion.tides.station_id} - level{' '}
+                {fmtRound(fusion.tideLevelM, ' m')}
+              </Row>
             )}
             {fusion.nearestWaterTemperature && (
-              <Row label="Water">{fusion.nearestWaterTemperature.name || fusion.nearestWaterTemperature.station_id} - {fmtRound(fusion.waterTemperatureC, ' C')}</Row>
+              <Row label="Water">
+                {fusion.nearestWaterTemperature.name || fusion.nearestWaterTemperature.station_id} -{' '}
+                {fmtRound(fusion.waterTemperatureC, ' C')}
+              </Row>
             )}
           </Section>
         )}
 
         <Section title="Satellite">
           {satellite?.google_satellite_url ? (
-            <img className={classes.satellite} src={satellite.google_satellite_url} alt="Satellite view" />
+            <img
+              className={classes.satellite}
+              src={satellite.google_satellite_url}
+              alt="Satellite view"
+            />
           ) : (
             <Typography className={classes.muted} sx={{ fontSize: 13 }}>
-              Satellite source checked. {satellite?.sentinel2?.reason || 'No image preview returned for this location.'}
+              Satellite source checked.{' '}
+              {satellite?.sentinel2?.reason || 'No image preview returned for this location.'}
             </Typography>
           )}
         </Section>

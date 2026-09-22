@@ -153,6 +153,28 @@ CREATE TABLE IF NOT EXISTS smartsurf_sessions (
   KEY idx_smartsurf_sessions_status (status)
 );
 
+CREATE TABLE IF NOT EXISTS smartsurf_forecast_snapshots (
+  forecast_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  traccar_user_id INT NOT NULL,
+  traccar_device_id INT,
+  spot_id BIGINT,
+  lat DECIMAL(10,7),
+  lon DECIMAL(10,7),
+  generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  history_window_hours INT DEFAULT 24,
+  provider_models JSON,
+  marine_model JSON,
+  tide_prediction JSON,
+  tracker_history_summary JSON,
+  forecast_windows JSON,
+  best_window JSON,
+  confidence DECIMAL(5,2),
+  raw_provider_snapshot JSON,
+  KEY idx_smartsurf_forecasts_user_time (traccar_user_id, generated_at),
+  KEY idx_smartsurf_forecasts_device_time (traccar_device_id, generated_at),
+  KEY idx_smartsurf_forecasts_spot_time (spot_id, generated_at)
+);
+
 CREATE TABLE IF NOT EXISTS smartsurf_incidents (
   incident_id BIGINT PRIMARY KEY AUTO_INCREMENT,
   session_id BIGINT,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import {
   Box,
@@ -27,6 +27,7 @@ import {
   loadSenlayFusion,
   normalizeSenlayPayload,
 } from './senlayFusion';
+import { forecastModelLabels, loadSmartSurfForecast } from './forecastModels';
 
 const SOURCE_ID = 'smartsurf-senlay-fusion';
 const LAYERS = [
@@ -273,13 +274,18 @@ const drawSensorPin = ({ ctx, x, y, label, color, nearest }) => {
 
 const popupHtml = (feature) => {
   const props = feature.properties || {};
-  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  }[char]));
+  const esc = (value) =>
+    String(value ?? '').replace(
+      /[&<>"']/g,
+      (char) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;',
+        })[char],
+    );
   return `
     <div style="font-family:Inter,system-ui,sans-serif;min-width:210px;color:#071827">
       <strong style="display:block;font-size:13px;margin-bottom:4px">${esc(props.label || 'Senlay source')}</strong>
@@ -303,7 +309,9 @@ const focusFusionMap = (featureCollection) => {
   };
 
   featureCollection.features
-    .filter((feature) => ['gps', 'sensor', 'tide', 'temperature', 'sourceLink'].includes(feature.properties?.kind))
+    .filter((feature) =>
+      ['gps', 'sensor', 'tide', 'temperature', 'sourceLink'].includes(feature.properties?.kind),
+    )
     .forEach((feature) => collect(feature.geometry));
 
   if (!coords.length) return;
@@ -311,9 +319,16 @@ const focusFusionMap = (featureCollection) => {
     (currentBounds, coordinate) => currentBounds.extend(coordinate),
     new maplibregl.LngLatBounds(coords[0], coords[0]),
   );
-  const narrow = Math.abs(bounds.getEast() - bounds.getWest()) < 0.02 && Math.abs(bounds.getNorth() - bounds.getSouth()) < 0.02;
+  const narrow =
+    Math.abs(bounds.getEast() - bounds.getWest()) < 0.02 &&
+    Math.abs(bounds.getNorth() - bounds.getSouth()) < 0.02;
   if (narrow) {
-    map.flyTo({ center: coords[0], zoom: Math.max(map.getZoom(), 11), duration: 900, essential: true });
+    map.flyTo({
+      center: coords[0],
+      zoom: Math.max(map.getZoom(), 11),
+      duration: 900,
+      essential: true,
+    });
   } else {
     const canvas = map.getCanvas();
     const desktop = canvas.width >= 900;
@@ -383,28 +398,8 @@ const addFusionLayers = () => {
         55,
         1,
       ],
-      'heatmap-intensity': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        6,
-        0.95,
-        11,
-        1.7,
-        14,
-        2.15,
-      ],
-      'heatmap-radius': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        6,
-        58,
-        10,
-        105,
-        14,
-        160,
-      ],
+      'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 6, 0.95, 11, 1.7, 14, 2.15],
+      'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 6, 58, 10, 105, 14, 160],
       'heatmap-opacity': 0.82,
       'heatmap-color': [
         'interpolate',
@@ -534,17 +529,7 @@ const addFusionLayers = () => {
         48,
         '#ffb08d',
       ],
-      'line-width': [
-        'interpolate',
-        ['linear'],
-        ['get', 'speed'],
-        8,
-        1.55,
-        32,
-        2.35,
-        52,
-        3.15,
-      ],
+      'line-width': ['interpolate', ['linear'], ['get', 'speed'], 8, 1.55, 32, 2.35, 52, 3.15],
       'line-opacity': 0.9,
       'line-blur': 0.25,
       'line-dasharray': [0.12, 2.4],
@@ -731,12 +716,7 @@ const addFusionLayers = () => {
     type: 'circle',
     filter: ['==', ['get', 'kind'], 'sensor'],
     paint: {
-      'circle-radius': [
-        'case',
-        ['==', ['get', 'nearest'], true],
-        18,
-        13,
-      ],
+      'circle-radius': ['case', ['==', ['get', 'nearest'], true], 18, 13],
       'circle-color': [
         'match',
         ['get', 'sensorType'],
@@ -748,12 +728,7 @@ const addFusionLayers = () => {
         '#b7f7d1',
         '#35d0a2',
       ],
-      'circle-opacity': [
-        'case',
-        ['==', ['get', 'nearest'], true],
-        0.32,
-        0.18,
-      ],
+      'circle-opacity': ['case', ['==', ['get', 'nearest'], true], 0.32, 0.18],
       'circle-blur': 0.45,
     },
   });
@@ -763,17 +738,7 @@ const addFusionLayers = () => {
     type: 'circle',
     filter: ['==', ['get', 'kind'], 'sensor'],
     paint: {
-      'circle-radius': [
-        'match',
-        ['get', 'sensorType'],
-        'wind',
-        8,
-        'marine',
-        9,
-        'air',
-        7,
-        7,
-      ],
+      'circle-radius': ['match', ['get', 'sensorType'], 'wind', 8, 'marine', 9, 'air', 7, 7],
       'circle-color': [
         'match',
         ['get', 'sensorType'],
@@ -786,18 +751,8 @@ const addFusionLayers = () => {
         '#35d0a2',
       ],
       'circle-opacity': 0.92,
-      'circle-stroke-color': [
-        'case',
-        ['==', ['get', 'nearest'], true],
-        '#ffffff',
-        '#06131f',
-      ],
-      'circle-stroke-width': [
-        'case',
-        ['==', ['get', 'nearest'], true],
-        3,
-        2,
-      ],
+      'circle-stroke-color': ['case', ['==', ['get', 'nearest'], true], '#ffffff', '#06131f'],
+      'circle-stroke-width': ['case', ['==', ['get', 'nearest'], true], 3, 2],
     },
   });
 
@@ -820,12 +775,7 @@ const addFusionLayers = () => {
     filter: ['in', ['get', 'kind'], ['literal', ['sensor', 'temperature', 'gps', 'tide']]],
     layout: {
       'text-field': ['get', 'label'],
-      'text-size': [
-        'case',
-        ['==', ['get', 'nearest'], true],
-        13,
-        11,
-      ],
+      'text-size': ['case', ['==', ['get', 'nearest'], true], 13, 11],
       'text-offset': [0, 1.35],
       'text-anchor': 'top',
       'text-allow-overlap': false,
@@ -840,37 +790,40 @@ const addFusionLayers = () => {
 
 const SenlayFusionMapLayer = ({ selectedPosition }) => {
   const { classes } = useStyles();
-  const { rider, safety, gear } = useSmartSurfData();
+  const { rider, safety, gear, selectedDeviceId } = useSmartSurfData();
   const canvasRef = useRef(null);
   const [enabled, setEnabled] = useState(true);
   const [layers, setLayers] = usePersistedState('smartsurfSenlayFusionLayers', layerDefaults);
   const [fusion, setFusion] = useState(null);
+  const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [chatOpen, setChatOpen] = useState(false);
   const [focusRequest, setFocusRequest] = useState(0);
   const center = useMemo(() => getFusionCenter(selectedPosition), [selectedPosition]);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
       const nextFusion = await loadSenlayFusion(center);
       setFusion(nextFusion);
+      setForecast(await loadSmartSurfForecast({ center, fusion: nextFusion, selectedDeviceId }));
       setFocusRequest(Date.now());
     } catch (event) {
       setError(event.message);
       const fallback = fallbackSenlayFusion();
       setFusion(fallback);
+      setForecast(await loadSmartSurfForecast({ center, fusion: fallback, selectedDeviceId }));
       setFocusRequest(Date.now());
     } finally {
       setLoading(false);
     }
-  };
+  }, [center, selectedDeviceId]);
 
   useEffect(() => {
     refresh();
-  }, [center.lat, center.lon]);
+  }, [refresh]);
 
   useEffect(() => {
     if (!enabled) {
@@ -900,7 +853,10 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
     setVisible('smartsurf-senlay-wind', layers.wind);
     setVisible('smartsurf-senlay-wind-arrows', layers.wind);
     setVisible('smartsurf-senlay-sensor-wind', layers.wind && layers.sensors && layers.animation);
-    setVisible('smartsurf-senlay-sensor-wind-arrows', layers.wind && layers.sensors && layers.animation);
+    setVisible(
+      'smartsurf-senlay-sensor-wind-arrows',
+      layers.wind && layers.sensors && layers.animation,
+    );
     setVisible('smartsurf-senlay-swell', layers.swell);
     setVisible('smartsurf-senlay-swell-arrows', layers.swell);
     setVisible('smartsurf-senlay-current', layers.currents);
@@ -911,7 +867,10 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
     setVisible('smartsurf-senlay-tides', layers.tides);
     setVisible('smartsurf-senlay-temperature', layers.temperature);
     setVisible('smartsurf-senlay-gps', layers.gps);
-    setVisible('smartsurf-senlay-labels', layers.sensors || layers.temperature || layers.gps || layers.tides);
+    setVisible(
+      'smartsurf-senlay-labels',
+      layers.sensors || layers.temperature || layers.gps || layers.tides,
+    );
   }, [enabled, layers, fusion]);
 
   useEffect(() => {
@@ -931,10 +890,18 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
         map.setPaintProperty('smartsurf-senlay-wind-particles', 'line-dasharray', steps[frame]);
       }
       if (map.getLayer('smartsurf-senlay-sensor-wind')) {
-        map.setPaintProperty('smartsurf-senlay-sensor-wind', 'line-dasharray', steps[(frame + 2) % steps.length]);
+        map.setPaintProperty(
+          'smartsurf-senlay-sensor-wind',
+          'line-dasharray',
+          steps[(frame + 2) % steps.length],
+        );
       }
       if (map.getLayer('smartsurf-senlay-current')) {
-        map.setPaintProperty('smartsurf-senlay-current', 'line-dasharray', steps[(frame + 3) % steps.length]);
+        map.setPaintProperty(
+          'smartsurf-senlay-current',
+          'line-dasharray',
+          steps[(frame + 3) % steps.length],
+        );
       }
       if (map.getLayer('smartsurf-senlay-swell')) {
         map.setPaintProperty('smartsurf-senlay-swell', 'line-dasharray', [1.8 + frame * 0.12, 1.1]);
@@ -970,7 +937,15 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
 
     const project = (lat, lon, rect) => {
       const point = map.project([lon, lat]);
-      return { x: point.x, y: point.y, visible: point.x >= -80 && point.y >= -80 && point.x <= rect.width + 80 && point.y <= rect.height + 80 };
+      return {
+        x: point.x,
+        y: point.y,
+        visible:
+          point.x >= -80 &&
+          point.y >= -80 &&
+          point.x <= rect.width + 80 &&
+          point.y <= rect.height + 80,
+      };
     };
 
     const drawSensors = (rect) => {
@@ -979,7 +954,12 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
       const buoys = (fusion.buoys || []).slice(0, 3);
 
       windSensors.forEach((sensor, index) => {
-        const coords = sensorCoords(sensor, center, 310 - index * 18, Math.min(4, 0.8 + index * 0.25));
+        const coords = sensorCoords(
+          sensor,
+          center,
+          310 - index * 18,
+          Math.min(4, 0.8 + index * 0.25),
+        );
         const point = project(coords.lat, coords.lon, rect);
         if (!point.visible) return;
         const speed = toNumber(sensor.wind_speed_kmh, fusion.windKmh);
@@ -989,7 +969,8 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
           y: point.y,
           color: '#ffe98a',
           nearest: index === 0,
-          label: index === 0 ? `Nearest wind ${Math.round(speed)} km/h` : `${Math.round(speed)} km/h`,
+          label:
+            index === 0 ? `Nearest wind ${Math.round(speed)} km/h` : `${Math.round(speed)} km/h`,
         });
       });
 
@@ -1043,7 +1024,15 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
             const bend = Math.sin((x + frame * 2) * 0.01 + y * 0.012) * 0.14;
             const px = x + Math.cos(angle) * drift + Math.sin(y * 0.02) * 10;
             const py = y + Math.sin(angle) * drift + Math.cos(x * 0.015) * 9;
-            drawParticleLine(ctx, px, py, angle + bend, 20 + Math.min(34, speed), speed, animate ? 0.72 : 0.42);
+            drawParticleLine(
+              ctx,
+              px,
+              py,
+              angle + bend,
+              20 + Math.min(34, speed),
+              speed,
+              animate ? 0.72 : 0.42,
+            );
           }
         }
         ctx.restore();
@@ -1087,14 +1076,22 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
       'smartsurf-senlay-temperature',
       'smartsurf-senlay-gps',
     ];
-    const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: '320px' });
+    const popup = new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: true,
+      maxWidth: '320px',
+    });
     const handleClick = (event) => {
       const feature = event.features?.[0];
       if (!feature) return;
       popup.setLngLat(event.lngLat).setHTML(popupHtml(feature)).addTo(map);
     };
-    const enter = () => { map.getCanvas().style.cursor = 'pointer'; };
-    const leave = () => { map.getCanvas().style.cursor = ''; };
+    const enter = () => {
+      map.getCanvas().style.cursor = 'pointer';
+    };
+    const leave = () => {
+      map.getCanvas().style.cursor = '';
+    };
     clickableLayers.forEach((id) => {
       if (map.getLayer(id)) {
         map.on('click', id, handleClick);
@@ -1115,122 +1112,191 @@ const SenlayFusionMapLayer = ({ selectedPosition }) => {
   }, [enabled, fusion]);
 
   const suggestion = fusion ? createFusionSuggestion({ rider, safety, gear, fusion }) : null;
+  const modelLabels = forecastModelLabels(forecast);
 
   const setLayer = (key, value) => setLayers({ ...layerDefaults, ...layers, [key]: value });
 
   return (
     <>
-    <canvas ref={canvasRef} className={classes.canvasOverlay} aria-hidden="true" />
-    <Paper className={classes.panel}>
-      <Box className={classes.summaryBlock}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1}>
-          <Box>
-            <Typography variant="overline" color="secondary">Senlay Fusion</Typography>
-            <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
-              Physical-world layer
-            </Typography>
-          </Box>
-          <Stack direction="row" gap={1} alignItems="center">
-            {loading && <CircularProgress color="secondary" size={18} />}
-            <Chip
-              size="small"
-              color={enabled ? 'secondary' : 'default'}
-              label={enabled ? 'On' : 'Off'}
-              onClick={() => setEnabled(!enabled)}
-            />
+      <canvas ref={canvasRef} className={classes.canvasOverlay} aria-hidden="true" />
+      <Paper className={classes.panel}>
+        <Box className={classes.summaryBlock}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1}>
+            <Box>
+              <Typography variant="overline" color="secondary">
+                Senlay Fusion
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1 }}>
+                Physical-world layer
+              </Typography>
+            </Box>
+            <Stack direction="row" gap={1} alignItems="center">
+              {loading && <CircularProgress color="secondary" size={18} />}
+              <Chip
+                size="small"
+                color={enabled ? 'secondary' : 'default'}
+                label={enabled ? 'On' : 'Off'}
+                onClick={() => setEnabled(!enabled)}
+              />
+            </Stack>
           </Stack>
-        </Stack>
 
-        {suggestion && (
-          <>
-          <Stack direction="row" gap={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
-            <Chip size="small" label={suggestion.status} color={suggestion.status === 'Go' ? 'success' : 'warning'} />
-            <Chip size="small" label={`Kite ${suggestion.recommendedKite}`} />
-            <Chip size="small" label={`Confidence ${Math.round((fusion.confidence || suggestion.confidence) * 100)}%`} />
-          </Stack>
-          <Typography className={classes.muted} sx={{ mt: 1, display: { xs: 'none', sm: 'block' } }}>
-            {suggestion.recommendedAction}
-          </Typography>
-          <Typography sx={{ mt: 1, fontWeight: 800 }}>
-            {Math.round(fusion.windKmh)} km/h wind, gusts {Math.round(fusion.gustKmh)} km/h, waves {fusion.waveM.toFixed(1)} m
-          </Typography>
-          <Box className={classes.miniFacts}>
-            <Box className={classes.miniFact}>
-              <strong>{fusion.nearestWindSensor ? `${fusion.nearestWindSensor.distance_km} km` : 'Model'}</strong>
-              <span>{fusion.nearestWindSensor ? 'nearest wind sensor' : 'wind source'}</span>
-            </Box>
-            <Box className={classes.miniFact}>
-              <strong>{fusion.swellM != null ? `${fusion.swellM.toFixed(1)} m` : '--'}</strong>
-              <span>swell from {Math.round(fusion.swellDirection)} deg</span>
-            </Box>
-            <Box className={classes.miniFact}>
-              <strong>{fusion.tideLevelM != null ? `${fusion.tideLevelM.toFixed(2)} m` : 'No gauge'}</strong>
-              <span>tide / level</span>
-            </Box>
-            <Box className={classes.miniFact}>
-              <strong>{fusion.waterTemperatureC != null ? `${fusion.waterTemperatureC.toFixed(1)} C` : `${Math.round(fusion.temperatureC)} C`}</strong>
-              <span>{fusion.waterTemperatureC != null ? 'water temp' : 'air temp'}</span>
-            </Box>
-          </Box>
-          </>
-        )}
-      </Box>
-
-      <Box className={classes.feedBlock} sx={{ display: { xs: 'none', md: 'block' } }}>
-        {suggestion && <SenlayContextFeed fusion={fusion} />}
-      </Box>
-
-      <Box className={classes.controlsBlock}>
-        <Typography variant="overline" color="secondary">Map Layers</Typography>
-        <Box className={classes.layerGrid}>
-          {Object.entries({
-            wind: 'Wind flow',
-            animation: 'Animation',
-            swell: 'Swell',
-            currents: 'Currents',
-            tides: 'Tides',
-            terrain: 'Terrain modifier',
-            sensors: 'Sources',
-            temperature: 'Temperature',
-            gps: 'GPS / spot',
-          }).map(([key, label]) => (
-            <FormControlLabel
-              key={key}
-              className={classes.checkbox}
-              control={(
-                <Checkbox
+          {suggestion && (
+            <>
+              <Stack direction="row" gap={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
+                <Chip
                   size="small"
-                  checked={!!layers[key]}
-                  onChange={(event) => setLayer(key, event.target.checked)}
-                  color="secondary"
+                  label={suggestion.status}
+                  color={suggestion.status === 'Go' ? 'success' : 'warning'}
                 />
+                <Chip size="small" label={`Kite ${suggestion.recommendedKite}`} />
+                <Chip
+                  size="small"
+                  label={`Confidence ${Math.round((fusion.confidence || suggestion.confidence) * 100)}%`}
+                />
+              </Stack>
+              <Typography
+                className={classes.muted}
+                sx={{ mt: 1, display: { xs: 'none', sm: 'block' } }}
+              >
+                {suggestion.recommendedAction}
+              </Typography>
+              <Typography sx={{ mt: 1, fontWeight: 800 }}>
+                {Math.round(fusion.windKmh)} km/h wind, gusts {Math.round(fusion.gustKmh)} km/h,
+                waves {fusion.waveM.toFixed(1)} m
+              </Typography>
+              {forecast?.summary && (
+                <Typography className={classes.muted} sx={{ mt: 0.75 }}>
+                  {forecast.summary}
+                </Typography>
               )}
-              label={label}
-            />
-          ))}
+              <Box className={classes.miniFacts}>
+                <Box className={classes.miniFact}>
+                  <strong>{forecast?.bestWindow?.label || 'Pending'}</strong>
+                  <span>
+                    {forecast?.bestWindow
+                      ? `${forecast.bestWindow.status} best window`
+                      : 'forecast window'}
+                  </span>
+                </Box>
+                <Box className={classes.miniFact}>
+                  <strong>
+                    {forecast?.nextWindow?.spreadKmh != null
+                      ? `${forecast.nextWindow.spreadKmh} km/h`
+                      : '--'}
+                  </strong>
+                  <span>model wind spread</span>
+                </Box>
+                <Box className={classes.miniFact}>
+                  <strong>
+                    {forecast?.tidePrediction?.currentLevelM != null
+                      ? `${forecast.tidePrediction.currentLevelM} m`
+                      : 'No tide'}
+                  </strong>
+                  <span>{forecast?.tidePrediction?.stage || 'tide proxy'}</span>
+                </Box>
+                <Box className={classes.miniFact}>
+                  <strong>
+                    {forecast?.history?.status === 'active'
+                      ? `${forecast.history.totalKm} km`
+                      : 'No history'}
+                  </strong>
+                  <span>24h tracker history</span>
+                </Box>
+              </Box>
+            </>
+          )}
         </Box>
 
-        <Stack direction="row" gap={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
-          <Button size="small" color="secondary" variant="contained" onClick={refresh} disabled={loading}>
-            Refresh
-          </Button>
-          <Button size="small" color="secondary" variant="outlined" onClick={() => setChatOpen(true)}>
-            Ask AI
-          </Button>
-          <Button size="small" color="inherit" component={Link} to="/smartsurf/conditions">
-            Details
-          </Button>
-          {error && <Chip size="small" color="warning" label="Fallback data" />}
-        </Stack>
-      </Box>
-      <SenlayWaterChat
-        open={chatOpen}
-        onClose={() => setChatOpen(false)}
-        center={center}
-        fusion={fusion}
-        onSenlayPayload={(payload) => setFusion(normalizeSenlayPayload(payload))}
-      />
-    </Paper>
+        <Box className={classes.feedBlock} sx={{ display: { xs: 'none', md: 'block' } }}>
+          {suggestion && <SenlayContextFeed fusion={fusion} forecast={forecast} />}
+        </Box>
+
+        <Box className={classes.controlsBlock}>
+          <Typography variant="overline" color="secondary">
+            Map Layers
+          </Typography>
+          <Box className={classes.layerGrid}>
+            {Object.entries({
+              wind: 'Wind flow',
+              animation: 'Animation',
+              swell: 'Swell',
+              currents: 'Currents',
+              tides: 'Tides',
+              terrain: 'Terrain modifier',
+              sensors: 'Sources',
+              temperature: 'Temperature',
+              gps: 'GPS / spot',
+            }).map(([key, label]) => (
+              <FormControlLabel
+                key={key}
+                className={classes.checkbox}
+                control={
+                  <Checkbox
+                    size="small"
+                    checked={!!layers[key]}
+                    onChange={(event) => setLayer(key, event.target.checked)}
+                    color="secondary"
+                  />
+                }
+                label={label}
+              />
+            ))}
+          </Box>
+
+          <Stack direction="row" gap={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
+            <Button
+              size="small"
+              color="secondary"
+              variant="contained"
+              onClick={refresh}
+              disabled={loading}
+            >
+              Refresh
+            </Button>
+            <Button
+              size="small"
+              color="secondary"
+              variant="outlined"
+              onClick={() => setChatOpen(true)}
+              disabled={loading || !forecast}
+            >
+              Ask AI
+            </Button>
+            <Button size="small" color="inherit" component={Link} to="/smartsurf/conditions">
+              Details
+            </Button>
+            {error && <Chip size="small" color="warning" label="Fallback data" />}
+          </Stack>
+          {modelLabels.length > 0 && (
+            <Stack direction="row" gap={0.75} sx={{ mt: 1, flexWrap: 'wrap' }}>
+              {modelLabels.slice(0, 4).map((model) => (
+                <Chip
+                  key={model.id}
+                  size="small"
+                  label={`${model.name}: ${model.status === 'active' ? model.detail : 'off'}`}
+                  color={model.status === 'active' ? 'secondary' : 'default'}
+                  variant={model.status === 'active' ? 'filled' : 'outlined'}
+                />
+              ))}
+            </Stack>
+          )}
+        </Box>
+        <SenlayWaterChat
+          open={chatOpen}
+          onClose={() => setChatOpen(false)}
+          center={center}
+          fusion={fusion}
+          forecast={forecast}
+          onSenlayPayload={async (payload) => {
+            const nextFusion = normalizeSenlayPayload(payload);
+            setFusion(nextFusion);
+            setForecast(
+              await loadSmartSurfForecast({ center, fusion: nextFusion, selectedDeviceId }),
+            );
+          }}
+        />
+      </Paper>
     </>
   );
 };

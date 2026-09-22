@@ -26,6 +26,7 @@ Users should see one SmartSurf-branded application and one login.
 - incident/SOS lifecycle
 - local spot safety network
 - Senlay environmental context
+- forecast prediction
 
 ## Senlay Responsibilities
 
@@ -37,6 +38,7 @@ Users should see one SmartSurf-branded application and one login.
 - air quality
 - source/freshness/confidence
 - physical-world risk notes
+- provider forecast and marine model inputs
 
 ## Current MVP Integration
 
@@ -66,8 +68,39 @@ Add SmartSurf API endpoints inside a small backend layer or Traccar server exten
 - `POST /api/smartsurf/sessions`
 - `POST /api/smartsurf/incidents`
 - `GET /api/smartsurf/senlay-context`
+- `GET /api/smartsurf/forecast`
+- `POST /api/smartsurf/forecast-snapshots`
 
 That backend should read Traccar user/device/position data and write `smartsurf_` tables.
+
+## Forecast Prediction v1
+
+The current UI computes forecast prediction in the browser. It combines:
+
+- selected Traccar device route history over the recent 24-hour window
+- Senlay Fusion current context
+- Open-Meteo Best Match weather forecast
+- NOAA GFS / HRRR forecast through Open-Meteo
+- ECMWF IFS / AIFS forecast through Open-Meteo
+- Open-Meteo Marine wave and swell forecast
+- Open-Meteo Marine sea-level height history/forecast as a tide proxy when no tide gauge is present
+- static local tide/surf-stage profiles as a low-confidence fallback when live/model tide data is absent
+
+Outputs:
+
+- `providerModels[]` with active/unavailable status
+- `marineModel`
+- `tidePrediction` with source, confidence, current level, trend, stage, and next high/low where derivable
+- `tidePrediction.staticProfile` with preferred/avoid surf tide stages when available
+- `history` tracker summary
+- `windows[]` hourly forecast windows with wind, gusts, waves, tide, model spread, confidence, and Go/Caution/No-Go
+- `bestWindow`
+- `nextWindow`
+- plain-language summary
+
+This is intentionally an MVP placement. The production version should move provider aggregation to a SmartSurf backend endpoint, persist snapshots in `smartsurf_forecast_snapshots`, and attach relevant snapshots to sessions and incidents.
+
+The Senlay chat prompt receives the forecast snapshot, provider model status, and tide/static profile details. If forecast context is available, the model is instructed to cite the forecast/tide source and not claim it has no access.
 
 ## Risk Engine v1
 

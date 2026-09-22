@@ -5,6 +5,8 @@ traccar.xml
 mysql/
 logs/
 data/
+!traccar-web/src/resources/images/data/
+!traccar-web/src/resources/images/data/engine.svg
 backups/*.sql
 backups/*.tar.gz
 *.pem
