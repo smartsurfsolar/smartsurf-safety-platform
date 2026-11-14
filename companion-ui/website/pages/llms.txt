@@ -1,0 +1,59 @@
+# SmartSurf
+
+SmartSurf is a water-sports safety and situational-awareness system. It combines
+rider location, independent board tracking, configured Watchdogs and available
+spot context to help riders notice meaningful changes. Built by Viktor
+Kryvotsiuk in Hoi An, Vietnam. Conditions intelligence is powered by Senlay.
+
+## Available products
+
+- SmartSurf app and Android Companion: web account, saved spots, phone location
+  reporting, text-based SmartSurf answers, condition Watchdogs and session data.
+  Free to start; Android phone tracking is available as an ARM64 APK.
+- SmartSurf Tracker: independent cellular GPS hardware for a board or rider,
+  available for preorder. USD 299 total; USD 149.50 refundable deposit.
+- Rider + Board Duo: two Trackers, USD 598 total; USD 299 refundable deposit.
+- School 10-Tracker Pack: USD 2,990 total; USD 1,495 refundable deposit.
+- Intelligence Pro: published prices are USD 4.99 for 30 days or USD 39 for 12
+  months, without automatic renewal. New Pro checkout is currently paused.
+  Features include personal briefings, wind/wave Watchdogs and text answers
+  grounded in the rider's available evidence and profile.
+- Schools and instructors: rosters, groups and session-gated location sharing
+  with rider consent. School setup and billing are arranged by enquiry.
+
+## Purchase and availability
+
+Hardware deposits remain refundable until written notice that production of the
+ordered units is beginning. The balance is due before final assembly. A deposit
+does not activate hardware. Shipping, taxes, duties and dispatch estimates are
+confirmed before collecting the remaining balance. Checkout and terms are the
+authoritative purchase record.
+
+Tracking platform access is included with fully paid hardware. Connectivity is
+an allocation of up to 10 years, 500 MB data and 250 SMS per Tracker, subject to
+usage and local network coverage. Do not describe it as unlimited or guaranteed
+offshore coverage.
+
+End-to-end spoken Companion alerts, hands-free Voice Copilot and wake-word
+activation are in development. Adaptive monitoring, the wider opt-in helper
+network, and Telegram/WhatsApp/Slack/webhook delivery are planned. In-app and
+email alerts are available for supported events. Custom boards remain
+quote-only; the Intercom is a prototype.
+
+Demonstrations are illustrative. Forecast verification requires fresh usable
+observations; learned local patterns need sufficient history. SmartSurf supports
+judgement and does not guarantee safety, recovery or rescue.
+
+## Pages
+
+- [SmartSurf and hardware](https://smartsurf.cloud/)
+- [SmartSurf app](https://app.smartsurf.cloud/)
+- [Preorders](https://smartsurf.cloud/preorder)
+- [Specifications](https://smartsurf.cloud/specs)
+- [Schools and instructors](https://app.smartsurf.cloud/schools.html)
+- [Intelligence Pro](https://app.smartsurf.cloud/intelligence.html)
+- [Founder](https://smartsurf.cloud/founder)
+- [Terms](https://app.smartsurf.cloud/terms.html)
+- [Privacy](https://app.smartsurf.cloud/privacy.html)
+
+Contact: smartsurfsolar@gmail.com

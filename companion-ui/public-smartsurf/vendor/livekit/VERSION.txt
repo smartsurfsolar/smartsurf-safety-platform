@@ -1,0 +1,3 @@
+livekit-client 2.23.0
+Source: https://registry.npmjs.org/livekit-client/-/livekit-client-2.23.0.tgz
+Registry integrity verified: sha512-j9Kg86nJjBjNFUD+ukp2jwMCGa0k+YD5gU//RzAM+ZY3pbG631QCte7fQjwqWMmtBzhDJL9nKYuOLMv/9IbAxg==

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartSurf for Schools & Instructors</title>
+<meta name="description" content="SmartSurf school fleet tracking, instructor dashboards and a 10-Tracker pack for watersports schools.">
+<link rel="canonical" href="https://app.smartsurf.cloud/schools.html">
+<meta property="og:title" content="SmartSurf for Schools &amp; Instructors">
+<meta property="og:description" content="Track riders and equipment from one school dashboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 var(--ss-font); padding:24px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:28px; margin:16px 0 6px; } h2 { font-size:20px; margin:0 0 10px; }
+  p { color:var(--ink2); } .lead { font-size:18px; color:var(--ink); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; margin:16px 0; }
+  label { display:block; font-size:13px; color:var(--ink2); margin:10px 0 6px; }
+  input, select, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #24435d; background:#08192a; color:var(--ink); font-size:16px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  button { width:100%; padding:13px; border-radius:var(--ss-r-2); border:0; background:var(--ss-acc-grad); color:#04131c; font-size:15px; font-weight:700; cursor:pointer; margin-top:12px; box-shadow:var(--ss-glow); }
+  .price { font-size:28px; font-weight:700; } .was { color:var(--ink2); text-decoration:line-through; margin-right:8px; }
+  .msg { margin-top:12px; font-size:14px; padding:12px; border-radius:10px; display:none; }
+  .msg.err { display:block; background:#3b1418; color:#ffb4b4; }
+  .msg.ok { display:block; background:#0d3324; color:#8ef0c0; }
+  a.back { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.02em; }
+  a.back img { border-radius:7px; box-shadow:0 0 0 1px var(--line),var(--ss-glow); flex:none; }
+  a.back .wm { background:linear-gradient(120deg,var(--ss-ink),var(--ss-acc-soft) 58%,var(--ss-acc-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+</style>
+<link rel="stylesheet" href="ui.css">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#081521">
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html"><img src="assets/brand-mark-128.png" alt="" width="24" height="24"><span class="wm">SmartSurf</span></a>
+  <h1>For schools &amp; instructors</h1>
+  <p class="lead">See your riders, students and equipment from one dashboard.</p>
+
+  <div class="card">
+    <h2 id="pack-name">SmartSurf School 10-Tracker Pack</h2>
+    <div><span class="was" id="pack-was"></span><span class="price" id="pack-price">&mdash;</span></div>
+    <p id="pack-per" class="muted"></p>
+    <p id="pack-deposit" class="muted"></p>
+    <ul id="pack-features"></ul>
+    <p class="muted">Need 25+ trackers? Request fleet pricing and we will tailor it.</p>
+  </div>
+
+  <div class="card">
+    <h2>Request School Setup</h2>
+    <div class="grid">
+      <div><label>School / organisation</label><input id="s-org"></div>
+      <div><label>Your name</label><input id="s-name"></div>
+    </div>
+    <div class="grid">
+      <div><label>Email</label><input id="s-email" type="email"></div>
+      <div><label>Country</label><input id="s-country"></div>
+    </div>
+    <div class="grid">
+      <div><label>Instructors</label><input id="s-instructors" type="number" min="1"></div>
+      <div><label>Trackers needed</label><input id="s-qty" type="number" min="1" value="10"></div>
+    </div>
+    <div class="grid">
+      <div><label>Primary sport</label>
+        <select id="s-sport"><option>kitesurfing</option><option>surfing</option><option>wingfoil</option><option>windsurfing</option><option>sup</option><option>sailing</option><option>mixed</option></select>
+      </div>
+      <div><label>Interested in</label>
+        <select id="s-interest"><option value="school">School tracking</option><option value="intelligence">Weather/AI intelligence</option><option value="duo">Rider + Board</option></select>
+      </div>
+    </div>
+    <label>Notes</label><textarea id="s-message" rows="3"></textarea>
+    <button type="button" id="s-submit">Request School Setup</button>
+    <div id="s-msg" class="msg"></div>
+  </div>
+  <p class="muted" style="text-align:center;margin-top:24px"><a href="index.html">Platform</a> · <a href="preorder.html">Tracker</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="mailto:smartsurfsolar@gmail.com">Contact</a></p>
+</div>
+
+<script src="commerce.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  window.SSCommerce.track('school_view', {});
+  window.SSCommerce.catalog().then(c => {
+    const p = c.products.school_pack_10; if (!p) return;
+    el('pack-name').textContent = p.name;
+    el('pack-price').textContent = window.SSCommerce.money(p.regularPriceCents, c.currency) + ' total';
+    el('pack-per').textContent = '10 trackers — ' + window.SSCommerce.money(Math.round(p.regularPriceCents / 10), c.currency) + ' per tracker';
+    el('pack-deposit').textContent = window.SSCommerce.money(p.depositCents, c.currency) + ' refundable deposit; remaining balance before final assembly.';
+    el('pack-features').innerHTML = (p.includes || []).map(f => '<li>' + f + '</li>').join('');
+  });
+  el('s-submit').onclick = async () => {
+    const msg = el('s-msg');
+    try {
+      msg.className = 'msg'; msg.textContent = '';
+      await window.SSCommerce.post('/api/leads', {
+        kind: 'school', name: el('s-name').value, email: el('s-email').value,
+        sport: el('s-sport').value, country: el('s-country').value,
+        interest: el('s-interest').value, quantity: Number(el('s-qty').value) || 10,
+        message: el('s-message').value,
+        payload: { org: el('s-org').value, instructors: Number(el('s-instructors').value) || null }
+      });
+      window.SSCommerce.track('school_lead_submitted', {});
+      msg.className = 'msg ok'; msg.textContent = 'Thanks — we will contact you about your school setup.';
+    } catch (e) { msg.className = 'msg err'; msg.textContent = e.message || 'Could not send.'; }
+  };
+})();
+</script>
+</body>
+</html>

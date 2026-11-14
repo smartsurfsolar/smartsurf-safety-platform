@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+  <!-- SmartSurf hardware tracker: a small waterproof GPS unit. -->
+  <defs>
+    <linearGradient id="th-body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16304a"/>
+      <stop offset="1" stop-color="#0d1e2f"/>
+    </linearGradient>
+  </defs>
+  <!-- lanyard loop -->
+  <path d="M70 16 h20 v10 a2 2 0 0 1 -2 2 h-16 a2 2 0 0 1 -2 -2 z" fill="#1e3d59"/>
+  <!-- body -->
+  <rect x="34" y="24" width="92" height="112" rx="20" fill="url(#th-body)" stroke="#2c4a63" stroke-width="3"/>
+  <!-- screen / face -->
+  <rect x="46" y="40" width="68" height="44" rx="10" fill="#081521" stroke="#1e3d59" stroke-width="2"/>
+  <!-- the SmartSurf wave mark -->
+  <path d="M50 66 c4 0 6 -8 10 -8 s6 8 10 8 6 -8 10 -8 s6 8 10 8 6 -8 10 -8" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="80" cy="66" r="3.2" fill="#22d3ee"/>
+  <!-- status LED -->
+  <circle cx="58" cy="98" r="5" fill="#22c55e"/>
+  <circle cx="58" cy="98" r="9" stroke="#22c55e" stroke-opacity=".35" stroke-width="2"/>
+  <!-- button -->
+  <rect x="96" y="93" width="18" height="18" rx="5" fill="#1e3d59" stroke="#2c4a63" stroke-width="2"/>
+  <!-- SOS label -->
+  <text x="80" y="130" text-anchor="middle" font-family="Barlow, sans-serif" font-size="11" font-weight="700" letter-spacing="1.4" fill="#8ba3b8">SOS</text>
+  <rect x="42" y="104" width="36" height="3" rx="1.5" fill="#1e3d59"/>
+</svg>

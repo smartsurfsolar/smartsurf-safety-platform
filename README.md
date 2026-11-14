@@ -241,3 +241,7 @@ To move to another server:
 - Direct browser refresh on nested React routes should be handled by the public reverse proxy. Open the app from `/` until the nginx domain config is active.
 - Auto-SOS detection is represented as a model and UI foundation; live detection from Traccar position streams is the next backend task.
 - Local Safety Network is opt-in model/UI foundation only, not public broadcast.
+
+## Current Companion UI sources
+
+The separately maintained Rider/Companion browser interface and public marketing templates are available in [companion-ui](companion-ui/README.md). Its runtime API and operational records are maintained privately.

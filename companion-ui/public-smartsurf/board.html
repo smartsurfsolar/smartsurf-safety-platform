@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartSurf — Build your board</title>
+<meta name="description" content="Request a custom SmartSurf board with integrated cellular GPS tracking.">
+<link rel="canonical" href="https://app.smartsurf.cloud/board.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 var(--ss-font); padding:24px; }
+  .wrap { max-width:680px; margin:0 auto; }
+  h1 { font-size:28px; margin:16px 0 6px; } h2 { font-size:20px; margin:0 0 10px; }
+  p { color:var(--ink2); } .lead { font-size:18px; color:var(--ink); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px; margin:16px 0; }
+  .opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt { border:1px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; background:#08192a; }
+  .opt.on { border-color:var(--acc); box-shadow:0 0 0 1px var(--acc); }
+  .opt .t { font-weight:700; } .opt .p { color:var(--ink2); font-size:13px; margin-top:4px; }
+  label { display:block; font-size:13px; color:var(--ink2); margin:10px 0 6px; }
+  input, select, textarea { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #24435d; background:#08192a; color:var(--ink); font-size:16px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  button { width:100%; padding:13px; border-radius:var(--ss-r-2); border:0; background:var(--ss-acc-grad); color:#04131c; font-size:15px; font-weight:700; cursor:pointer; margin-top:12px; box-shadow:var(--ss-glow); }
+  .check { display:flex; gap:10px; align-items:center; margin-top:12px; color:var(--ink); }
+  .msg { margin-top:12px; font-size:14px; padding:12px; border-radius:10px; display:none; }
+  .msg.err { display:block; background:#3b1418; color:#ffb4b4; } .msg.ok { display:block; background:#0d3324; color:#8ef0c0; }
+  a.back { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.02em; }
+  a.back img { border-radius:7px; box-shadow:0 0 0 1px var(--line),var(--ss-glow); flex:none; }
+  a.back .wm { background:linear-gradient(120deg,var(--ss-ink),var(--ss-acc-soft) 58%,var(--ss-acc-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .muted { color:var(--ink2); font-size:13px; }
+</style>
+<link rel="stylesheet" href="ui.css">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#081521">
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html"><img src="assets/brand-mark-128.png" alt="" width="24" height="24"><span class="wm">SmartSurf</span></a>
+  <h1>Build your SmartSurf Board</h1>
+  <p class="lead">The tracker can become part of the board itself — integrated into the build and designed to stay with the board.</p>
+
+  <div class="card">
+    <h2>1 · Board type</h2>
+    <div class="opts" id="board-types"></div>
+    <p class="muted" id="board-price"></p>
+  </div>
+
+  <div class="card">
+    <h2>2 · Configure</h2>
+    <div class="grid">
+      <div><label>Length</label><input id="b-length" placeholder="e.g. 6'2&quot;"></div>
+      <div><label>Volume (L)</label><input id="b-volume" type="number" min="18" max="200"></div>
+    </div>
+    <div class="grid">
+      <div><label>Construction</label>
+        <select id="b-construction"><option>Standard</option><option>Carbon / structural upgrade (+$100–200)</option><option>Premium (+$200–500)</option></select>
+      </div>
+      <div><label>Artwork</label>
+        <select id="b-artwork"><option>No artwork</option><option>Custom graphics (+$49–99)</option><option>Full custom artwork (+$149+)</option><option>School / brand logo (+$49)</option></select>
+      </div>
+    </div>
+    <div class="grid">
+      <div><label>Name on board</label><input id="b-name" placeholder="e.g. VIKTOR"></div>
+      <div><label>Sport</label>
+        <select id="b-sport"><option>surfing</option><option>kitesurfing</option><option>wingfoil</option><option>windsurfing</option><option>sup</option><option>downwind</option></select>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox" id="b-rider" style="width:auto"> Add a Rider Tracker (+$299 total; $149.50 refundable deposit) for Rider ↔ Board safety</label>
+  </div>
+
+  <div class="card">
+    <h2>3 · Request your build</h2>
+    <div class="grid">
+      <div><label>Your name</label><input id="b-owner"></div>
+      <div><label>Email</label><input id="b-email" type="email"></div>
+    </div>
+    <div class="grid">
+      <div><label>Country</label><input id="b-country"></div>
+      <div><label>Skill level</label>
+        <select id="b-skill"><option>beginner</option><option>intermediate</option><option>advanced</option><option>expert</option></select>
+      </div>
+    </div>
+    <label>Notes</label><textarea id="b-notes" rows="3"></textarea>
+    <button type="button" id="b-submit">Request Build</button>
+    <div id="b-msg" class="msg"></div>
+    <p class="muted">Custom boards are built to order. We confirm specifications, price and lead time before any payment.</p>
+  </div>
+  <p class="muted" style="text-align:center;margin-top:24px"><a href="index.html">Platform</a> · <a href="preorder.html">Tracker</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="mailto:smartsurfsolar@gmail.com">Contact</a></p>
+</div>
+
+<script src="commerce.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  let catalog = null, boardKey = 'board_surf', started = false;
+  window.SSCommerce.track('board_view', {});
+
+  function markStarted() { if (!started) { started = true; window.SSCommerce.track('board_config_started', { board: boardKey }); } }
+
+  function renderTypes() {
+    const keys = ['board_surf', 'board_kite', 'board_foil', 'board_sup'];
+    el('board-types').innerHTML = keys.map(k => {
+      const p = catalog.products[k]; if (!p) return '';
+      const founder = p.founderEligible && catalog.founder.remaining > 0 && p.fromFounderPriceCents != null;
+      const from = founder ? p.fromFounderPriceCents : p.fromRegularPriceCents;
+      return `<div class="opt ${k === boardKey ? 'on' : ''}" data-k="${k}"><div class="t">${p.name}</div><div class="p">from ${window.SSCommerce.money(from, catalog.currency)}${founder ? ' Founder' : ''}</div></div>`;
+    }).join('');
+    el('board-types').querySelectorAll('.opt').forEach(n => n.onclick = () => { boardKey = n.dataset.k; markStarted(); renderTypes(); renderPrice(); });
+  }
+  function renderPrice() {
+    const p = catalog.products[boardKey]; if (!p) return;
+    const founder = p.founderEligible && catalog.founder.remaining > 0 && p.fromFounderPriceCents != null;
+    const from = founder ? p.fromFounderPriceCents : p.fromRegularPriceCents;
+    el('board-price').textContent = `From ${window.SSCommerce.money(from, catalog.currency)}${founder ? ' (Founder Series — first 10 boards)' : ''}. Final price depends on dimensions, construction and materials.`;
+  }
+
+  window.SSCommerce.catalog().then(c => { catalog = c; renderTypes(); renderPrice(); });
+  ['b-length', 'b-volume', 'b-construction', 'b-artwork', 'b-name', 'b-sport', 'b-rider'].forEach(id => {
+    const node = el(id); if (node) node.addEventListener('change', markStarted);
+  });
+
+  el('b-submit').onclick = async () => {
+    const msg = el('b-msg');
+    try {
+      msg.className = 'msg'; msg.textContent = '';
+      await window.SSCommerce.post('/api/leads', {
+        kind: 'board', name: el('b-owner').value, email: el('b-email').value,
+        sport: el('b-sport').value, country: el('b-country').value, interest: 'board',
+        message: el('b-notes').value,
+        payload: {
+          board: boardKey, length: el('b-length').value, volume: el('b-volume').value,
+          construction: el('b-construction').value, artwork: el('b-artwork').value,
+          nameOnBoard: el('b-name').value, skill: el('b-skill').value,
+          addRiderTracker: el('b-rider').checked
+        }
+      });
+      window.SSCommerce.track('board_lead_submitted', { board: boardKey });
+      msg.className = 'msg ok'; msg.textContent = 'Request received. We will confirm your build and price.';
+    } catch (e) { msg.className = 'msg err'; msg.textContent = e.message || 'Could not send.'; }
+  };
+})();
+</script>
+</body>
+</html>

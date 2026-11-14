@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<title>SmartSurf checkout</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 var(--ss-font); padding:24px; }
+  .wrap { max-width:560px; margin:0 auto; }
+  a.back { color:var(--acc); text-decoration:none; font-size:14px; }
+  a.brandlink { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.02em; }
+  a.brandlink img { border-radius:7px; box-shadow:0 0 0 1px var(--line),var(--ss-glow); flex:none; }
+  a.brandlink .wm { background:linear-gradient(120deg,var(--ss-ink),var(--ss-acc-soft) 58%,var(--ss-acc-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  h1 { font-size:24px; margin:16px 0 4px; }
+  p.sub { color:var(--ink2); margin:0 0 20px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--ss-r-3); padding:20px; margin-bottom:16px; }
+  .row { margin-bottom:14px; }
+  label { display:block; font-size:13px; color:var(--ink2); margin-bottom:6px; }
+  input, select { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #24435d; background:#08192a; color:var(--ink); font-size:16px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt { border:1px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; background:#08192a; }
+  .opt.on { border-color:var(--acc); box-shadow:0 0 0 1px var(--acc); }
+  .opt .t { font-weight:700; }
+  .opt .p { color:var(--ink2); font-size:13px; margin-top:4px; }
+  .badge { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.06em; color:#04131f; background:var(--good); border-radius:999px; padding:2px 8px; margin-left:8px; }
+  .was { color:var(--ink2); text-decoration:line-through; margin-right:8px; }
+  .upsell { border:1px dashed var(--good); border-radius:12px; padding:14px; margin-bottom:14px; }
+  .upsell button { width:auto; padding:10px 14px; margin-top:10px; }
+  .total { display:flex; justify-content:space-between; align-items:baseline; margin:18px 0 8px; }
+  .total b { font-size:22px; }
+  button { width:100%; padding:15px; border-radius:var(--ss-r-2); border:0; background:var(--ss-acc-grad); color:#04131f; font-size:16px; font-weight:700; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  .ghost { background:transparent; color:var(--acc); border:1px solid var(--acc); }
+  .msg { margin-top:14px; font-size:14px; padding:12px; border-radius:10px; display:none; }
+  .msg.err { display:block; background:#3b1418; color:#ffb4b4; }
+  .muted { color:var(--ink2); font-size:13px; margin-top:10px; }
+  .hidden { display:none; }
+  .ok-box { text-align:center; padding:32px 8px; }
+  .ok-box .big { font-size:44px; margin-bottom:8px; }
+</style>
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#081521">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div class="wrap">
+  <a class="brandlink" href="preorder.html"><img src="assets/brand-mark-128.png" alt="" width="24" height="24"><span class="wm">SmartSurf</span></a>
+
+  <div id="view-loading" class="card">Preparing secure checkout&hellip;</div>
+
+  <div id="view-pay" class="hidden">
+    <h1 id="pay-title">Checkout</h1>
+    <p class="sub" id="pay-sub"></p>
+
+    <div class="card" id="setup-card">
+      <div id="product-choices" class="opts"></div>
+      <div id="upsell" class="upsell hidden" style="margin-top:14px">
+        <strong>Going out with a board?</strong>
+        <div class="muted" id="upsell-text"></div>
+        <button type="button" class="ghost" id="upsell-btn">Switch to the Duo</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="order-fields">
+        <div class="row"><label>Full name</label><input id="f-name" autocomplete="name"></div>
+        <div class="row"><label>Email</label><input id="f-email" type="email" autocomplete="email"></div>
+        <div class="row"><label>Shipping address</label><input id="f-address" autocomplete="street-address"></div>
+        <div class="grid">
+          <div class="row"><label>City</label><input id="f-city" autocomplete="address-level2"></div>
+          <div class="row"><label>Postal code</label><input id="f-zip" autocomplete="postal-code"></div>
+        </div>
+        <div class="row"><label>Country</label>
+          <select id="f-country">
+            <option>Vietnam</option><option>United States</option><option>United Kingdom</option>
+            <option>Germany</option><option>France</option><option>Spain</option><option>Portugal</option>
+            <option>Australia</option><option>Brazil</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div id="hardware-summary">
+        <div class="total"><span>Order total</span><b id="order-total-amount">&mdash;</b></div>
+        <div class="total"><span>Refundable deposit due today</span><b id="total-amount">&mdash;</b></div>
+        <div class="total"><span>Remaining balance before final assembly</span><b id="balance-amount">&mdash;</b></div>
+        <p class="muted">Your deposit is fully refundable until we notify you in writing that production of your unit is beginning.</p>
+      </div>
+      <div id="subscription-summary" class="hidden">
+        <div class="total"><span id="total-label">Due today</span><b id="subscription-total-amount">&mdash;</b></div>
+        <p class="muted">This is a one-period payment and does not auto-renew.</p>
+      </div>
+      <label class="muted" style="display:flex;gap:9px;align-items:flex-start;margin:14px 0">
+        <input id="terms-agree" type="checkbox" style="width:auto;margin-top:3px">
+        <span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms</a> and acknowledge the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+      </label>
+      <div id="dropin"></div>
+      <button id="pay-btn" disabled>Loading payment methods&hellip;</button>
+      <div id="msg" class="msg"></div>
+      <p class="muted">Basic tracking is included with hardware and never requires a subscription. Payments are processed securely by PayPal. SmartSurf never sees your card details.</p>
+    </div>
+  </div>
+
+  <div id="view-done" class="hidden">
+    <div class="card ok-box">
+      <div class="big">&#10003;</div>
+      <h1 id="done-title">Payment received</h1>
+      <p id="done-body" class="sub"></p>
+      <p class="muted" id="done-ref"></p>
+      <a class="back" href="activate.html" id="done-activate">Activate your tracker &rarr;</a><br><br>
+      <a class="back" href="index.html">Return to SmartSurf</a>
+    </div>
+  </div>
+</div>
+
+<script src="commerce.js"></script>
+<script>
+(function () {
+  const q = new URLSearchParams(location.search);
+  const type = q.get('type') === 'subscription' ? 'subscription' : 'order';
+  const cycle = q.get('cycle') === 'yr' ? 'yearly' : 'monthly';
+  const promoCode = String(q.get('promo') || '').trim().toUpperCase();
+  const billingKey = `smartsurf-billing-${cycle}-${promoCode || 'standard'}`;
+  const idempotencyKey = sessionStorage.getItem(billingKey) || (() => {
+    const value = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `ss-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    sessionStorage.setItem(billingKey, value);
+    return value;
+  })();
+  let product = (q.get('product') || 'tracker').toLowerCase();
+  const qty = Math.max(1, Math.min(10, parseInt(q.get('quantity') || '1', 10) || 1));
+
+  const el = id => document.getElementById(id);
+  let catalog = null, provider = null, currency = 'USD', founderActive = false, addons = new Set();
+
+  function money(cents) { return window.SSCommerce.money(cents, currency); }
+  function show(view) { ['view-loading', 'view-pay', 'view-done'].forEach(v => el(v).classList.toggle('hidden', v !== view)); }
+  function error(message) { const m = el('msg'); m.className = 'msg err'; m.textContent = message; }
+  function clearError() { const m = el('msg'); m.className = 'msg'; m.textContent = ''; }
+
+  function productEntry(key) { return catalog.products[key]; }
+  function priceFor(key, quantity) {
+    const p = productEntry(key);
+    if (!p) return { unitCents: 0, totalCents: 0, depositCents: 0, founder: false };
+    const founder = founderActive && p.founderEligible && p.founderPriceCents != null;
+    const unit = founder ? p.founderPriceCents : p.regularPriceCents;
+    return {
+      unitCents: unit,
+      totalCents: unit * quantity,
+      depositCents: Number.isFinite(Number(p.depositCents)) ? Number(p.depositCents) * quantity : unit * quantity,
+      founder,
+      entry: p
+    };
+  }
+  function addonCost(key) {
+    const a = catalog.addons[key];
+    if (!a) return 0;
+    if (founderActive && a.founderFree) return 0;
+    return a.regularPriceCents || 0;
+  }
+  function cartTotal() {
+    const base = priceFor(product, product === 'duo' ? 1 : qty);
+    let total = base.totalCents;
+    addons.forEach(key => { total += addonCost(key); });
+    return { base, total, dueNow: base.depositCents, balance: Math.max(0, total - base.depositCents) };
+  }
+
+  function renderProducts() {
+    const keys = ['tracker', 'duo'];
+    el('product-choices').innerHTML = keys.map(key => {
+      const p = productEntry(key);
+      if (!p || !p.active) return '';
+      const priced = priceFor(key, key === 'duo' ? 1 : qty);
+      const badge = p.badge ? `<span class="badge">${p.badge}</span>` : '';
+      return `<div class="opt ${key === product ? 'on' : ''}" data-key="${key}">
+        <div class="t">${p.name}${key === 'duo' ? badge : ''}</div>
+        <div class="p"><strong>${money(priced.unitCents)}</strong> total · ${money(priced.depositCents)} deposit</div>
+      </div>`;
+    }).join('');
+    el('product-choices').querySelectorAll('.opt').forEach(node => {
+      node.onclick = () => {
+        product = node.dataset.key;
+        window.SSCommerce.track(product === 'duo' ? 'duo_add_to_cart' : 'tracker_add_to_cart', { founder: founderActive });
+        render();
+      };
+    });
+    const up = el('upsell');
+    if (product === 'tracker') {
+      const duo = priceFor('duo', 1);
+      const single = priceFor('tracker', 1);
+      const delta = duo.unitCents - single.unitCents;
+      el('upsell-text').textContent = `Rider + Board Duo is ${money(duo.unitCents)} total with a ${money(duo.depositCents)} refundable deposit.`;
+      el('upsell').classList.remove('hidden');
+      el('upsell-btn').textContent = `Switch to Duo (+${money(delta)})`;
+      el('upsell-btn').onclick = () => {
+        product = 'duo';
+        window.SSCommerce.track('duo_upgrade_accept', { deltaCents: delta });
+        render();
+      };
+    } else {
+      up.classList.add('hidden');
+    }
+  }
+
+  function render() {
+    renderProducts();
+    const cart = cartTotal();
+    el('order-total-amount').textContent = money(cart.total);
+    el('total-amount').textContent = money(cart.dueNow);
+    el('balance-amount').textContent = money(cart.balance);
+    el('pay-sub').textContent = cart.base.entry ? cart.base.entry.name : '';
+    if (provider === 'paypal') {
+      const b = el('pay-btn'); b.disabled = !checkoutReady(); b.textContent = `Pay refundable deposit · ${money(cart.dueNow)}`;
+      b.onclick = () => { if (!checkoutReady()) return validateCheckout(); window.SSCommerce.track('checkout_started', { provider, product, totalCents: cart.total, depositCents: cart.dueNow }); paypalOrder(); };
+    }
+  }
+
+  function checkoutReady() {
+    if (!el('terms-agree').checked) return false;
+    if (type === 'subscription') return true;
+    const fields = customerFields();
+    return Boolean(fields.name.trim() && fields.email.includes('@') && fields.address.trim() && fields.city.trim() && fields.zip.trim() && fields.country.trim());
+  }
+
+  function validateCheckout() {
+    if (!el('terms-agree').checked) return error('Please accept the Terms and Privacy Policy before continuing.');
+    if (type === 'order' && !checkoutReady()) return error('Complete your name, email and shipping address before continuing.');
+    clearError();
+  }
+
+  function customerFields() {
+    return {
+      name: el('f-name').value, email: el('f-email').value,
+      address: el('f-address').value, city: el('f-city').value,
+      zip: el('f-zip').value, country: el('f-country').value
+    };
+  }
+
+  async function paypalOrder() {
+    try {
+      el('pay-btn').disabled = true; clearError();
+      const data = await window.SSCommerce.post('/api/orders/start', {
+        product, quantity: product === 'duo' ? 1 : qty,
+        founder: founderActive, addons: Array.from(addons),
+        termsAccepted: true,
+        personalization: addons.has('personal_name') ? { name: el('f-name').value } : null,
+        ...customerFields()
+      });
+      if (!data.approvalUrl) throw new Error('PayPal did not return an approval link.');
+      location.href = data.approvalUrl;
+    } catch (e) { el('pay-btn').disabled = false; error(e.message || 'Checkout failed.'); }
+  }
+
+  async function paypalSubscription() {
+    try {
+      el('pay-btn').disabled = true; clearError();
+      const data = await window.SSCommerce.post('/api/billing/checkout', { cycle, promoCode: promoCode || undefined, idempotencyKey, termsAccepted: true });
+      if (!data.approvalUrl) throw new Error('PayPal did not return an approval link.');
+      location.href = data.approvalUrl;
+    } catch (e) { el('pay-btn').disabled = false; error(e.message || 'Checkout failed.'); }
+  }
+
+  const loadedScripts = {};
+  function loadScript(src) {
+    if (loadedScripts[src]) return loadedScripts[src];
+    loadedScripts[src] = new Promise((resolve, reject) => {
+      const s = document.createElement('script'); s.src = src; s.async = true;
+      s.onload = resolve; s.onerror = () => reject(new Error('Could not load the payment library.'));
+      document.head.appendChild(s);
+    });
+    return loadedScripts[src];
+  }
+  async function ensureBraintree() {
+    await loadScript('https://js.braintreegateway.com/web/dropin/1.43.0/js/dropin.min.js');
+    await loadScript('https://js.braintreegateway.com/web/3.145.0/js/paypal-checkout.min.js');
+    return window.braintree;
+  }
+  async function mountDropIn(clientToken, onNonce, chargeCents = null, buttonLabel = '') {
+    const braintree = await ensureBraintree();
+    const cart = cartTotal();
+    const amountCents = Number.isFinite(Number(chargeCents)) ? Number(chargeCents) : cart.dueNow;
+    braintree.dropin.create({
+      authorization: clientToken, container: el('dropin'),
+      paypal: { flow: 'checkout', amount: (amountCents / 100).toFixed(2), currency }
+    }, (err, instance) => {
+      if (err) { error(err.message || 'Could not initialise payments.'); return; }
+      const b = el('pay-btn'); b.disabled = !checkoutReady(); b.textContent = buttonLabel || ('Pay refundable deposit · ' + money(amountCents));
+      b.onclick = () => {
+        if (!checkoutReady()) return validateCheckout();
+        b.disabled = true;
+        instance.requestPaymentMethod(async (pmErr, payload) => {
+          if (pmErr) { b.disabled = false; error(pmErr.message); return; }
+          try { await onNonce(payload.nonce); } catch (e) { b.disabled = false; error(e.message); }
+        });
+      };
+    });
+  }
+
+  async function start() {
+    try {
+      catalog = await window.SSCommerce.catalog();
+      currency = catalog.currency || currency;
+      founderActive = false;
+
+      if (type === 'subscription') {
+        const status = await fetch('/api/billing/status', { credentials: 'same-origin' }).then(r => r.json());
+        provider = status.billing && status.billing.provider;
+        const plan = catalog.subscriptions.intelligence_pro || {};
+        const baseCents = cycle === 'yearly' ? plan.annualCents : plan.monthlyCents;
+        let cents = baseCents;
+        if (promoCode) {
+          const promo = await window.SSCommerce.post('/api/v1/billing/promo/validate', { code: promoCode, cycle });
+          if (!promo.valid) throw new Error(promo.reason || 'This promo code is not available.');
+          cents = Number(promo.totalCents);
+        }
+        el('setup-card').classList.add('hidden');
+        el('order-fields').classList.add('hidden');
+        el('hardware-summary').classList.add('hidden');
+        el('subscription-summary').classList.remove('hidden');
+        el('pay-title').textContent = 'SmartSurf Intelligence Pro';
+        el('pay-sub').textContent = cycle === 'yearly' ? '12-month access period' : '30-day access period';
+        el('total-label').textContent = 'Due today';
+        el('subscription-total-amount').textContent = money(cents);
+        if (promoCode) el('pay-sub').textContent += ` · promo ${promoCode}`;
+        show('view-pay');
+        window.SSCommerce.track('intelligence_demo_opened', { cycle });
+        if (provider === 'paypal') { const b = el('pay-btn'); b.disabled = !checkoutReady(); b.textContent = 'Continue to PayPal'; b.onclick = () => checkoutReady() ? paypalSubscription() : validateCheckout(); }
+        else if (provider === 'braintree') {
+          const c = await window.SSCommerce.post('/api/billing/checkout', { cycle, promoCode: promoCode || undefined, idempotencyKey });
+          cents = Number(c.amountCents);
+          await mountDropIn(c.clientToken, async nonce => {
+            const r = await window.SSCommerce.post('/api/billing/confirm', { paymentMethodNonce: nonce, cycle, checkoutId: c.checkoutId, termsAccepted: true });
+            sessionStorage.removeItem(billingKey);
+            done('You are on SmartSurf Pro', 'Your access is active. This purchase does not auto-renew.', r.periodEnd || r.billing?.currentPeriodEnd || '');
+          }, cents, 'Pay ' + money(cents));
+        }
+        else throw new Error('Payments are not configured yet.');
+        return;
+      }
+
+      // Order flow
+      if (!productEntry(product)) product = 'tracker';
+      el('pay-title').textContent = 'SmartSurf Tracker';
+      const pricing = await fetch('/api/orders/pricing', { credentials: 'same-origin' }).then(r => r.json());
+      provider = pricing.provider;
+      show('view-pay');
+      window.SSCommerce.track('checkout_started', { provider, product, founder: founderActive });
+      if (provider === 'paypal' || provider === 'braintree') {
+        render();
+        if (provider === 'braintree') {
+          const token = await fetch('/api/orders/client-token', { credentials: 'same-origin' }).then(r => r.json());
+          await mountDropIn(token.clientToken, async nonce => {
+            const r = await window.SSCommerce.post('/api/orders', { paymentMethodNonce: nonce, product, quantity: product === 'duo' ? 1 : qty, founder: founderActive, addons: Array.from(addons), termsAccepted: true, ...customerFields() });
+            window.SSCommerce.track('checkout_completed', { reference: r.order.reference });
+            done('Deposit confirmed', 'We emailed your receipt. Your deposit remains refundable until production begins.', 'Reference ' + r.order.reference);
+          });
+        }
+      } else {
+        throw new Error('Payments are not configured yet.');
+      }
+    } catch (e) {
+      show('view-pay'); el('pay-btn').disabled = true; el('pay-btn').textContent = 'Checkout unavailable';
+      error(e.message || 'Checkout is unavailable right now.');
+    }
+  }
+
+  function done(title, body, ref, canActivate = false) {
+    el('done-title').textContent = title; el('done-body').textContent = body; el('done-ref').textContent = ref || '';
+    el('done-activate').classList.toggle('hidden', !canActivate);
+    show('view-done');
+  }
+
+  document.addEventListener('input', () => {
+    if (type === 'order') render();
+    if (provider === 'braintree') el('pay-btn').disabled = !checkoutReady();
+  });
+  el('terms-agree').addEventListener('change', () => {
+    if (type === 'order') render();
+    if (provider === 'paypal' || provider === 'braintree') el('pay-btn').disabled = !checkoutReady();
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>

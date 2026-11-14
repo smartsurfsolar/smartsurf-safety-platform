@@ -1,0 +1,40 @@
+/* School-compatible planning surfaces. Manual students never imply GPS consent. */
+.planner-intro{padding:13px 16px;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:9px;background:var(--panel);color:var(--ink2);margin-bottom:16px;line-height:1.6}
+.planner-intro strong{color:var(--ink)}
+.planner-toolbar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin-bottom:16px}
+.planner-toolbar .field{flex:1;min-width:180px}
+.planner-toolbar .button{min-height:40px}
+.planner-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.planner-summary .card-body{padding:16px}
+.planner-summary strong{display:block;margin:8px 0;font:600 22px/1.2 var(--mono)}
+.planner-summary p{color:var(--ink3);font-size:12px}
+.planner-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(270px,1fr);gap:16px;align-items:start}
+.planner-meta{color:var(--ink3);font-size:12px;line-height:1.6;margin-top:7px;overflow-wrap:anywhere}
+.planner-list{display:grid;gap:12px}
+.planner-student{border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:17px;min-width:0}
+.planner-student h2{font-size:18px;margin-bottom:5px}
+.planner-student-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.planner-window{border-top:1px solid var(--soft);padding:12px 0 0;margin-top:12px;display:flex;gap:12px;justify-content:space-between;align-items:start}
+.planner-window strong{display:block;font-size:15px}
+.planner-window small{display:block;color:var(--ink2);margin-top:5px;line-height:1.5}
+.planner-window .pill{white-space:normal;line-height:1.4}
+.planner-note{padding:10px 12px;margin-top:12px;border-radius:7px;background:#13283b;color:var(--ink2);font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.planner-empty{padding:24px;border:1px dashed var(--line);border-radius:11px;color:var(--ink2);line-height:1.65}
+.planner-empty h2{color:var(--ink);margin-bottom:8px}
+.planner-error{padding:12px;border:1px solid var(--red);border-radius:8px;color:#ffd2d2;background:#321f29;margin-bottom:15px;line-height:1.55}
+.planner-setup{margin-top:16px;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+.planner-setup>summary{cursor:pointer;padding:15px;font-weight:600;min-height:44px}
+.planner-setup form{padding:0 16px 16px}
+.planner-setup .row{margin-top:14px}
+.planner-dialog{width:min(570px,calc(100vw - 28px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--line);border-radius:14px;color:var(--ink);background:var(--panel)}
+.planner-dialog::backdrop{background:#020b15c9;backdrop-filter:blur(4px)}
+.planner-dialog .card-head h2{font-size:21px}
+.planner-dialog .dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.planner-dialog textarea{min-height:80px;resize:vertical}
+.planner-dialog button{min-height:40px}
+.planner-filter-note{font-size:12px;color:var(--ink3);margin-bottom:12px}
+.nav{overflow-y:auto}.side-foot{flex-shrink:0}.content{max-width:1360px}
+.mobile-tabs{overflow-x:auto}.mobile-tabs button{min-width:0}
+@media(max-width:1060px){.planner-layout{grid-template-columns:1fr}.planner-evidence{order:2}}
+@media(max-width:760px){.mobile-tabs{grid-template-columns:repeat(6,minmax(0,1fr))}.planner-summary{grid-template-columns:1fr;gap:8px}.planner-summary .card-body{display:grid;grid-template-columns:1fr auto;gap:5px 12px}.planner-summary strong{margin:0;grid-column:2;grid-row:1/3;font-size:20px;align-self:center}.planner-summary p{grid-column:1}.planner-student-head,.planner-window{flex-wrap:wrap}.planner-toolbar .field{min-width:0;flex-basis:100%}.planner-toolbar .button{flex:1}.planner-student .button{min-height:40px}.planner-dialog .form-grid{grid-template-columns:1fr}.planner-window .pill{max-width:100%}.toast{bottom:80px}}
+@media(max-width:760px){.planner-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.planner-summary .card-body{display:block;padding:11px 9px}.planner-summary .card-title{font-size:8px;line-height:1.5;display:block;min-height:24px}.planner-summary strong{margin:6px 0;font-size:18px}.planner-summary p{font-size:10px;line-height:1.4}.planner-summary strong small{font-size:10px}.top .button{min-height:38px}}

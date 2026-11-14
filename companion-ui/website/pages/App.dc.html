@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<title>SmartSurf Rider + Board Safety — Voice Copilot in Development</title>
+<meta name="description" content="SmartSurf brings rider and board positions, condition Watchdogs and available spot context together. Text answers are available; hands-free Voice Copilot is in development.">
+<meta name="keywords" content="water sports safety system, rider board tracking, SmartSurf Watchdog, watersports Voice Copilot">
+<meta name="author" content="Viktor Kryvotsiuk">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://smartsurf.cloud/App.dc.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SmartSurf">
+<meta property="og:title" content="SmartSurf Rider + Board Safety — Voice Copilot in Development">
+<meta property="og:description" content="SmartSurf brings rider and board positions, condition Watchdogs and available spot context together. Text answers are available; hands-free Voice Copilot is in development.">
+<meta property="og:url" content="https://smartsurf.cloud/App.dc.html">
+<meta property="og:image" content="https://smartsurf.cloud/assets/smartsurf-product-orange-solar.webp">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SmartSurf Rider + Board Safety — Voice Copilot in Development">
+<meta name="twitter:description" content="SmartSurf brings rider and board positions, condition Watchdogs and available spot context together. Text answers are available; hands-free Voice Copilot is in development.">
+<meta name="twitter:image" content="https://smartsurf.cloud/assets/smartsurf-product-orange-solar.webp">
+<meta name="theme-color" content="#081521">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://smartsurf.cloud/#org",
+      "name": "SmartSurf",
+      "url": "https://smartsurf.cloud",
+      "logo": "https://smartsurf.cloud/assets/brand-mark-128.png",
+      "description": "SmartSurf combines rider and board tracking, condition Watchdogs and available watersports context.",
+      "foundingDate": "2020",
+      "email": "smartsurfsolar@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Hoi An",
+        "addressCountry": "VN"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Viktor Kryvotsiuk",
+        "jobTitle": "Founder",
+        "sameAs": "https://www.linkedin.com/in/viktor-kryvotsiuk-0b7449151/"
+      },
+      "sameAs": [
+        "https://senlay.world/",
+        "https://www.linkedin.com/in/viktor-kryvotsiuk-0b7449151/"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "SmartSurf Rider",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Android",
+      "description": "Water-sports app with Android phone location reporting, saved spots, condition Watchdogs, text-based SmartSurf answers and available tracker context. Hands-free Voice Copilot is in development.",
+      "publisher": {
+        "@id": "https://smartsurf.cloud/#org"
+      },
+      "url": "https://smartsurf.cloud/App.dc.html",
+      "featureList": [
+        "Android phone location reporting",
+        "Wind and wave condition Watchdogs",
+        "Text answers grounded in available spot context",
+        "Paired tracker separation rules using fresh positions",
+        "Scheduled spot briefings where configured",
+        "Hands-free Voice Copilot (in development)",
+        "Expanded group awareness (planned)"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is hands-free Voice Copilot available now?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not yet. Hands-free questions, wake-word activation, spoken answers and voice-triggered SOS are in development. The SmartSurf web app and Android phone location Companion are available now."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does SmartSurf decide whether a session is safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. SmartSurf can present available conditions, positions and alerts, but it does not replace your judgement, local supervision, safety equipment or rescue services. Missing or stale information cannot confirm that a rider is safe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can I use today?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The web app, Android phone location reporting, text-based SmartSurf answers, wind and wave Watchdogs, and consent-based school tools are available. SmartSurf Tracker hardware is currently on preorder. New Intelligence Pro checkout is paused."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I receive spoken alerts or ask questions by voice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "End-to-end spoken Companion alerts and hands-free Voice Copilot interaction are not released yet. The server can queue supported Companion events, but voice behavior still depends on a compatible Android build and field validation."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="mobile.css?v=20260905">
+<script src="mobile.js?v=20260905" defer></script>
+<link rel="stylesheet" href="/brand-identity.css?v=20260928-brand-v1">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png">
+</head>
+<body class="ss-responsive">
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700;800;900&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #081521; -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(47,159,224,0.32); }
+  a { text-decoration: none; color: inherit; }
+  a:hover { color: #57c4fa; }
+  @keyframes ssPulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+</style>
+</helmet>
+
+<div style="background:#081521; color:#eef4f7; font-family:'Hanken Grotesk',sans-serif; overflow-x:hidden;">
+
+  <!-- NAV -->
+  <header style="position:sticky; top:0; z-index:50; backdrop-filter:blur(14px); background:rgba(10,26,36,0.78); border-bottom:1px solid rgba(125,165,180,0.12);">
+    <nav style="max-width:1280px; margin:0 auto; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px;" class="ss-flex-wrap ss-mobile-padding">
+      <a href="SmartSurf.dc.html" style="display:flex; align-items:center; gap:11px;" class="ss-flex-wrap">
+        <img class="site-brand-mark" src="/assets/brand-mark-128.png" alt="" width="30" height="30">
+        <span style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:18px;">SmartSurf</span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#71889a; border-left:1px solid rgba(125,165,180,0.2); padding-left:11px;">APP</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:24px; font-size:14.5px; color:#adc1cc; font-weight:500;" class="ss-flex-wrap">
+        <a href="#loop" style-hover="color:#eef4f7;">What it does</a>
+        <a href="#voice" style-hover="color:#eef4f7;">Voice</a>
+        <a href="#brief" style-hover="color:#eef4f7;">Pre-session</a>
+        <a href="#stages" style-hover="color:#eef4f7;">Stages</a>
+        <a href="Tracker.dc.html" style-hover="color:#eef4f7;">Tracker</a>
+        <a href="https://senlay.world/" style-hover="color:#eef4f7;">Senlay</a>
+        <a href="Contact.dc.html" style-hover="color:#eef4f7;">Contact</a>
+      </div>
+      <a href="https://app.smartsurf.cloud/access.html?mode=signup" style="font-size:14px; font-weight:700; color:#081521; background:#38bdf8; padding:10px 18px; border-radius:9px; box-shadow:0 0 24px rgba(56,189,248,0.28);" style-hover="background:#7dd3fc; color:#081521;">Create an account</a>
+    <button type="button" class="ss-menu-toggle" aria-expanded="false" aria-label="Toggle navigation">Menu</button></nav>
+  </header>
+
+  <!-- HERO -->
+  <section style="max-width:1280px; margin:0 auto; padding:72px 32px 40px;" class="ss-mobile-padding">
+    <div style="display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:56px; align-items:center;" class="ss-layout-grid">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:9px; padding:7px 14px; border:1px solid rgba(47,159,224,0.3); border-radius:100px; background:rgba(47,159,224,0.06); font-size:12.5px; font-weight:700; letter-spacing:0.04em; color:#8fd0f5; margin-bottom:24px;" class="ss-flex-wrap">
+          <span style="width:7px; height:7px; border-radius:50%; background:#38bdf8; box-shadow:0 0 10px #38bdf8; animation:ssPulse 2.4s infinite;"></span>
+          SMARTSURF APP AVAILABLE · VOICE COPILOT IN DEVELOPMENT
+        </div>
+        <h1 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:56px; line-height:1.0; letter-spacing:-0.03em; margin:0 0 20px; color:#f5f9fb;">Your rider.<br>Your board.<br>One safety system.</h1>
+        <p style="font-size:19px; line-height:1.65; color:#c8d8e2; margin:0 0 16px; max-width:580px;">SmartSurf brings the rider’s reported position, independent board tracking and available spot conditions together. Set a Watchdog for what matters and ask SmartSurf about the evidence available for your spot.</p>
+        <p style="font-size:15.5px; line-height:1.6; color:#adc1cc; margin:0 0 32px; max-width:560px;">The SmartSurf web app and Android Companion are available now. The SmartSurf Tracker gives a board its own GPS position and is currently on preorder. Hands-free Voice Copilot is in development.</p>
+        <div style="display:flex; gap:13px; flex-wrap:wrap;" class="ss-flex-wrap">
+          <a href="https://app.smartsurf.cloud/" style="display:inline-flex; align-items:center; gap:9px; font-size:16px; font-weight:800; color:#081521; background:#38bdf8; padding:16px 28px; border-radius:12px; box-shadow:0 8px 30px rgba(47,159,224,0.3);" style-hover="background:#57c4fa; color:#081521;" class="ss-flex-wrap ss-mobile-padding">Open SmartSurf</a>
+          <a href="Tracker.dc.html" style="display:inline-flex; align-items:center; font-size:16px; font-weight:600; color:#e6eef3; border:1px solid rgba(125,165,180,0.26); padding:16px 26px; border-radius:12px;" style-hover="background:rgba(255,255,255,0.06); color:#e6eef3;" class="ss-flex-wrap ss-mobile-padding">Explore the Tracker →</a>
+        </div>
+        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;" class="ss-flex-wrap">
+          <span style="display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:#7ee0b4; background:rgba(47,190,143,0.08); border:1px solid rgba(47,190,143,0.25); padding:6px 12px; border-radius:100px;" class="ss-flex-wrap">Condition Watchdogs</span>
+          <span style="display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:#8fd0f5; background:rgba(47,159,224,0.08); border:1px solid rgba(47,159,224,0.25); padding:6px 12px; border-radius:100px;" class="ss-flex-wrap">Ask SmartSurf by text</span>
+          <span style="display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:#adc1cc; background:rgba(125,165,180,0.08); border:1px solid rgba(125,165,180,0.22); padding:6px 12px; border-radius:100px;" class="ss-flex-wrap">Voice Copilot in development</span>
+        </div>
+      </div>
+
+      <!-- Phone mock -->
+      <div style="justify-self:center; width:296px; background:#0a1820; border:1px solid rgba(125,165,180,0.2); border-radius:34px; padding:13px; box-shadow:0 40px 90px rgba(0,0,0,0.5);" class="ss-mobile-width">
+        <div style="background:#0e2330; border-radius:24px; overflow:hidden;">
+          <div style="padding:15px 17px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(125,165,180,0.12);" class="ss-flex-wrap">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#7ee0b4; display:flex; align-items:center; gap:7px;" class="ss-flex-wrap"><span style="width:6px; height:6px; border-radius:50%; background:#2fbe8f; box-shadow:0 0 8px #2fbe8f; animation:ssPulse 1.8s infinite;"></span>ILLUSTRATIVE DEMO</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#71889a;">0:42</div>
+          </div>
+          <div style="padding:22px 18px; text-align:center; background:radial-gradient(80% 90% at 50% 0%, rgba(47,190,143,0.1), transparent 70%);" class="ss-mobile-padding">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#7ee0b4; letter-spacing:0.1em; margin-bottom:10px;">STATUS</div>
+            <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:34px; color:#7ee0b4; line-height:1;">SAMPLE</div>
+            <div style="font-size:12.5px; color:#adc1cc; margin-top:9px; line-height:1.5;">Example state · not live data</div>
+          </div>
+          <div style="padding:14px 17px; display:flex; flex-direction:column; gap:9px; border-top:1px solid rgba(125,165,180,0.1);" class="ss-flex-wrap">
+            <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Conditions</span><span style="color:#eef4f7; font-weight:600;">When available</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Positions</span><span style="color:#eef4f7; font-weight:600;">Freshness shown</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Watchdogs</span><span style="color:#8fd0f5; font-weight:600;">Configured rules</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Missing data</span><span style="color:#ffd27a; font-weight:600;">Shown as unavailable</span></div>
+          </div>
+          <div style="padding:13px 17px 17px; display:flex; gap:9px;" class="ss-flex-wrap">
+            <div style="flex:1; text-align:center; font-size:12.5px; font-weight:700; color:#081521; background:#e0503c; padding:11px; border-radius:9px;">Alert concept</div>
+            <div style="flex:2; text-align:center; font-size:12.5px; font-weight:600; color:#c8d8e2; border:1px solid rgba(125,165,180,0.24); padding:11px; border-radius:9px;">Voice · in development</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HONEST STATUS -->
+  <section style="max-width:1280px; margin:0 auto; padding:20px 32px;" class="ss-mobile-padding">
+    <div style="padding:20px 24px; background:rgba(255,197,61,0.06); border:1px solid rgba(255,197,61,0.24); border-left:3px solid #ffc53d; border-radius:12px;" class="ss-mobile-padding">
+      <p style="margin:0; font-size:14.5px; color:#e6c78a; line-height:1.65;"><strong style="color:#ffd27a;">Current status:</strong> the web app, Android location Companion, text-based SmartSurf answers, configured wind/wave Watchdogs and consent-based school tools are available. Tracker hardware is on preorder. The hands-free Voice Copilot and the voice, contact and group examples below are in development or planned; they are not released features. Sample screens and readings are illustrative, not live data. New Intelligence Pro checkout is currently paused.</p>
+    </div>
+  </section>
+
+  <!-- THE LOOP -->
+  <section id="loop" style="max-width:1280px; margin:0 auto; padding:80px 32px 30px;" class="ss-mobile-padding">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:14px;">ONE REAL LOOP</div>
+    <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:38px; line-height:1.06; letter-spacing:-0.02em; margin:0 0 16px; color:#f5f9fb; max-width:760px;">Start a session. Come back safe. Someone knows either way.</h2>
+    <p style="font-size:16.5px; color:#adc1cc; max-width:660px; margin:0 0 44px; line-height:1.6;">Not another social feed or performance tracker. A digital safety system for the rider, their family, their instructor, and the school.</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;" class="ss-layout-grid">
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fd0f5; margin-bottom:12px;">01 · BEFORE</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:18px; color:#f5f9fb; margin-bottom:8px;">Should you go out?</div>
+        <p style="margin:0; font-size:14px; color:#9bb0bb; line-height:1.6;">A pre-session brief for <em style="font-style:normal; color:#c8d8e2;">your</em> sport, gear and level — conditions, sunset, connectivity, battery, spot risks.</p>
+      </div>
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fd0f5; margin-bottom:12px;">02 · DURING</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:18px; color:#f5f9fb; margin-bottom:8px;">Phone as tracker</div>
+        <p style="margin:0; font-size:14px; color:#9bb0bb; line-height:1.6;">The session records your route and speed, a live map link lets trusted people see you're fine — and you run the whole thing by voice.</p>
+      </div>
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(224,80,60,0.28); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#f0a08e; margin-bottom:12px;">03 · IF IT GOES WRONG</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:18px; color:#f5f9fb; margin-bottom:8px;">SOS, hands-free</div>
+        <p style="margin:0; font-size:14px; color:#9bb0bb; line-height:1.6;">Trigger by voice or one tap. Trusted contacts get an alert and a live map. Never paywalled, and it works without the AI.</p>
+      </div>
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fd0f5; margin-bottom:12px;">04 · AFTER</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:18px; color:#f5f9fb; margin-bottom:8px;">What happened</div>
+        <p style="margin:0; font-size:14px; color:#9bb0bb; line-height:1.6;">Track, speed, distance, duration, key events — and a safety timeline explaining what the system knew and why it warned you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICE COPILOT — the central scenario -->
+  <section id="voice" style="position:relative; overflow:hidden; border-top:1px solid rgba(125,165,180,0.1);">
+    <div style="position:absolute; inset:0; background:radial-gradient(70% 90% at 20% 0%, rgba(47,159,224,0.09), transparent 62%);"></div>
+    <div style="position:relative; max-width:1280px; margin:0 auto; padding:96px 32px 40px;" class="ss-mobile-padding">
+      <div style="display:inline-flex; align-items:center; gap:9px; padding:7px 14px; border:1px solid rgba(47,159,224,0.32); border-radius:100px; background:rgba(47,159,224,0.07); font-size:12.5px; font-weight:700; letter-spacing:0.04em; color:#8fd0f5; margin-bottom:22px;" class="ss-flex-wrap">
+        <span style="width:7px; height:7px; border-radius:50%; background:#38bdf8; box-shadow:0 0 10px #38bdf8; animation:ssPulse 2.2s infinite;"></span>
+        VOICE COPILOT · IN DEVELOPMENT
+      </div>
+      <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:44px; line-height:1.04; letter-spacing:-0.025em; margin:0 0 18px; color:#f5f9fb; max-width:820px;">Hear useful updates. Ask what changed.</h2>
+      <p style="font-size:18px; line-height:1.65; color:#c8d8e2; max-width:700px; margin:0 0 14px;">SmartSurf is developing a hands-free way to hear supported session updates and ask about the rider, board and available conditions. The examples on this page show the direction; wake-word activation, voice questions, spoken answers and voice-triggered SOS are not released.</p>
+      <p style="font-size:15.5px; line-height:1.6; color:#adc1cc; max-width:680px; margin:0 0 48px;">Ask SmartSurf by text today. Voice Copilot will build on the same available session context, with missing or stale data kept visible.</p>
+
+      <!-- What you can say -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px;" class="ss-layout-grid">
+        <div style="padding:26px; background:#0e2836; border:1px solid rgba(47,190,143,0.24); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#7ee0b4; margin-bottom:16px;">REACH PEOPLE</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#c8d8e2; line-height:1.5;" class="ss-flex-wrap">
+            <div style="padding-left:14px; border-left:2px solid rgba(47,190,143,0.4); font-style:italic;">"SmartSurf, call my wife."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,190,143,0.4); font-style:italic;">"Connect me to the instructor."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,190,143,0.4); font-style:italic;">"Tell the group I'm returning to shore."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,190,143,0.4); font-style:italic;">"Send my location to my wife."</div>
+          </div>
+        </div>
+        <div style="padding:26px; background:#0e2836; border:1px solid rgba(47,159,224,0.24); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fd0f5; margin-bottom:16px;">ASK THE WATER</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#c8d8e2; line-height:1.5;" class="ss-flex-wrap">
+            <div style="padding-left:14px; border-left:2px solid rgba(47,159,224,0.4); font-style:italic;">"What is the wind doing?"</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,159,224,0.4); font-style:italic;">"Is the wind getting stronger?"</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,159,224,0.4); font-style:italic;">"How far am I from the beach?"</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(47,159,224,0.4); font-style:italic;">"Where is my board?"</div>
+          </div>
+        </div>
+        <div style="padding:26px; background:#0e2836; border:1px solid rgba(224,80,60,0.26); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#f0a08e; margin-bottom:16px;">SAFETY &amp; STATUS</div>
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#c8d8e2; line-height:1.5;" class="ss-flex-wrap">
+            <div style="padding-left:14px; border-left:2px solid rgba(224,80,60,0.45); font-style:italic;">"Emergency. Activate SOS."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(224,80,60,0.45); font-style:italic;">"I'm OK."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(224,80,60,0.45); font-style:italic;">"Repeat the last warning."</div>
+            <div style="padding-left:14px; border-left:2px solid rgba(224,80,60,0.45); font-style:italic;">"Battery, GPS and signal status."</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- The question that matters most -->
+      <div style="padding:30px 32px; background:linear-gradient(120deg, rgba(47,159,224,0.09), rgba(47,159,224,0.02)); border:1px solid rgba(47,159,224,0.3); border-radius:18px; margin-bottom:44px;" class="ss-mobile-padding">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:#8fd0f5; margin-bottom:12px;">CONCEPT QUESTION · NOT AVAILABLE BY VOICE</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:26px; color:#f5f9fb; margin-bottom:12px; font-style:italic;">"Can I still make it back?"</div>
+        <p style="margin:0; font-size:15.5px; color:#c2d3dd; line-height:1.65; max-width:800px;">A future Copilot could explain available position and condition context in response to a question like this. SmartSurf does not currently calculate a route-to-shore or return-time safety verdict. Do not use this concept example to make an on-water decision.</p>
+      </div>
+
+      <!-- How it works: two flows -->
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:22px;">ILLUSTRATIVE FUTURE VOICE FLOW</div>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:20px;" class="ss-layout-grid">
+        <div style="padding:28px; background:#0a1820; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:17px; color:#f5f9fb; margin-bottom:16px;">Asking about conditions</div>
+          <div style="display:flex; flex-direction:column; gap:9px; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#adc1cc; margin-bottom:20px;" class="ss-flex-wrap">
+            <div>Future voice request</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div><span style="color:#8fd0f5;">Senlay</span> environmental context</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div><span style="color:#a5e6f7;">SmartSurf</span> interpretation</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div>Spoken answer · in development</div>
+          </div>
+          <div style="padding:16px 18px; background:#0e2330; border-left:2px solid #38bdf8; border-radius:0 10px 10px 0;">
+            <div style="font-size:13.5px; color:#c8d8e2; line-height:1.65;">Illustrative response only. SmartSurf will use available evidence and may say it does not know.</div>
+          </div>
+          <p style="margin:14px 0 0; font-size:12.5px; color:#8ba0ac; line-height:1.55;">Text answers are available. Spoken answers are still in development.</p>
+        </div>
+        <div style="padding:28px; background:#0a1820; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:17px; color:#f5f9fb; margin-bottom:16px;">Reaching a person</div>
+          <div style="display:flex; flex-direction:column; gap:9px; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#adc1cc; margin-bottom:20px;" class="ss-flex-wrap">
+            <div>Future voice request</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div>Contact or group resolution</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div>Confirmation where needed</div>
+            <div style="color:#5a6e78;">↓</div>
+            <div>Contact or spoken message · planned</div>
+          </div>
+          <div style="padding:16px 18px; background:#0e2330; border-left:2px solid #2fbe8f; border-radius:0 10px 10px 0; display:flex; flex-direction:column; gap:7px; font-size:13.5px; line-height:1.55;" class="ss-flex-wrap">
+            <div style="color:#9bb0bb;">Rider — <span style="color:#c8d8e2;">"Call my wife."</span></div>
+            <div style="color:#9bb0bb;">Assistant — <span style="color:#c8d8e2;">"Calling Anna. Confirm?"</span></div>
+            <div style="color:#9bb0bb;">Rider — <span style="color:#c8d8e2;">"Yes."</span></div>
+            <div style="color:#9bb0bb;">Assistant — <span style="color:#c8d8e2;">"Connecting."</span></div>
+          </div>
+          <p style="margin:14px 0 0; font-size:12.5px; color:#8ba0ac; line-height:1.55;">Voice-controlled calls and messages are planned and are not available today.</p>
+        </div>
+      </div>
+
+      <!-- SOS path -->
+      <div style="padding:28px 30px; background:#0a1820; border:1px solid rgba(224,80,60,0.3); border-radius:18px; margin-bottom:20px;" class="ss-mobile-padding">
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:32px; align-items:center;" class="ss-layout-grid">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:#f0a08e; margin-bottom:12px;">VOICE SOS · NOT RELEASED</div>
+            <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:19px; color:#f5f9fb; margin-bottom:10px;">This interaction is a product concept.</div>
+            <p style="margin:0; font-size:14.5px; color:#c2d3dd; line-height:1.65;">Local speech recognition, voice-triggered SOS, an offline safety core and the spoken cancellation flow shown here are not available. SmartSurf is not an emergency or rescue service.</p>
+          </div>
+          <div style="padding:18px 20px; background:#0e2330; border-left:2px solid #e0503c; border-radius:0 10px 10px 0; display:flex; flex-direction:column; gap:8px; font-size:13.5px; line-height:1.55;" class="ss-flex-wrap">
+            <div style="color:#9bb0bb;">Rider — <span style="color:#c8d8e2;">"Emergency. Activate SOS."</span></div>
+            <div style="color:#9bb0bb;">Assistant — <span style="color:#c8d8e2;">"SOS activated. Your position is being transmitted. Say cancel to stop."</span></div>
+            <div style="color:#9bb0bb;">Assistant — <span style="color:#c8d8e2;">"Anna and your instructor have been alerted."</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-tier reliability -->
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px;" class="ss-layout-grid">
+        <div style="padding:26px; background:#0e2836; border:1px solid rgba(47,190,143,0.26); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#7ee0b4; margin-bottom:12px;">LOCAL VOICE CONTROL · IN DEVELOPMENT</div>
+          <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:17px; color:#f5f9fb; margin-bottom:10px;">Simple commands</div>
+          <p style="margin:0; font-size:14px; color:#c2d3dd; line-height:1.6;">Wake-word activation, local speech recognition and offline voice commands are being explored. They are not available in the current Companion app.</p>
+        </div>
+        <div style="padding:26px; background:#0e2836; border:1px solid rgba(47,159,224,0.26); border-radius:16px;" class="ss-mobile-padding">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8fd0f5; margin-bottom:12px;">TEXT AGENT · AVAILABLE</div>
+          <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:700; font-size:17px; color:#f5f9fb; margin-bottom:10px;">Ask about available context</div>
+          <p style="margin:0; font-size:14px; color:#c2d3dd; line-height:1.6;">Ask SmartSurf by text about saved spots and the evidence available for them. Spoken questions and answers are not available yet and require a compatible Companion release.</p>
+        </div>
+      </div>
+
+      <p style="margin:20px 0 0; font-size:12.5px; color:#71889a; line-height:1.6; max-width:860px;">Hands-free Voice Copilot, spoken event alerts, wake-word activation, local speech recognition and voice SOS remain in development. Server-side delivery alone does not mean a compatible Android client can speak an alert; on-water behavior needs a released build and field validation.</p>
+    </div>
+  </section>
+
+  <!-- PRE-SESSION BRIEF (folds in PreSession) -->
+  <section id="brief" style="background:#0e2330; border-top:1px solid rgba(125,165,180,0.1); border-bottom:1px solid rgba(125,165,180,0.1);">
+    <div style="max-width:1280px; margin:0 auto; padding:80px 32px;" class="ss-mobile-padding">
+      <div style="display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:56px; align-items:center;" class="ss-layout-grid">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:14px;">ASK SMARTSURF · AVAILABLE BY TEXT</div>
+          <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:34px; line-height:1.08; letter-spacing:-0.02em; margin:0 0 16px; color:#f5f9fb;">Understand the evidence you have.</h2>
+          <p style="font-size:16.5px; line-height:1.65; color:#c2d3dd; margin:0 0 26px; max-width:560px;">Ask SmartSurf about a saved spot and the conditions available for it. Replies can use current context and your profile where available, and should make missing or stale evidence clear. SmartSurf does not decide whether it is safe for you to ride.</p>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:26px;" class="ss-layout-grid">
+            <div style="padding:18px 16px; background:#102a38; border:1px solid rgba(47,190,143,0.3); border-radius:12px;">
+              <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#7ee0b4; margin-bottom:6px;">GO</div>
+              <p style="margin:0; font-size:12.5px; color:#9bb0bb; line-height:1.5;">Matches your gear and level, data is trustworthy, hazards clear.</p>
+            </div>
+            <div style="padding:18px 16px; background:#102a38; border:1px solid rgba(255,197,61,0.32); border-radius:12px;">
+              <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#ffd27a; margin-bottom:6px;">CAUTION</div>
+              <p style="margin:0; font-size:12.5px; color:#9bb0bb; line-height:1.5;">Rideable but something's moving — go smart, set limits.</p>
+            </div>
+            <div style="padding:18px 16px; background:#102a38; border:1px solid rgba(224,80,60,0.32); border-radius:12px;">
+              <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#f0705c; margin-bottom:6px;">NO-GO</div>
+              <p style="margin:0; font-size:12.5px; color:#9bb0bb; line-height:1.5;">Beyond safe margins for this spot, gear and level.</p>
+            </div>
+          </div>
+          <p style="font-size:14px; color:#9bb0bb; line-height:1.65; max-width:560px;">The context comes from <a href="https://senlay.world/" style="color:#8fd0f5; font-weight:600;">Senlay</a>, SmartSurf's physical-world layer — and the app always shows where a value came from and how fresh it is, so you can judge the judgement. <a href="https://senlay.world/demo" style="color:#8fd0f5; font-weight:600;">Try that engine live →</a></p>
+        </div>
+
+        <!-- Brief mock -->
+        <div style="justify-self:center; width:296px; background:#0a1820; border:1px solid rgba(125,165,180,0.2); border-radius:34px; padding:13px; box-shadow:0 40px 90px rgba(0,0,0,0.5);" class="ss-mobile-width">
+          <div style="background:#0e2330; border-radius:24px; overflow:hidden;">
+            <div style="padding:15px 17px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(125,165,180,0.12);" class="ss-flex-wrap">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#8fd0f5;">ILLUSTRATIVE · NOT LIVE</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#71889a;">HOI AN</div>
+            </div>
+            <div style="padding:24px 18px; text-align:center; background:radial-gradient(80% 90% at 50% 0%, rgba(255,197,61,0.12), transparent 70%);" class="ss-mobile-padding">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#ffd27a; letter-spacing:0.1em; margin-bottom:10px;">THE CALL</div>
+              <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:38px; color:#ffc53d; line-height:1;">CAUTION</div>
+              <div style="font-size:12.5px; color:#adc1cc; margin-top:9px; line-height:1.5;">Rideable but building. Watch gusts, set an offshore limit.</div>
+            </div>
+            <div style="padding:14px 17px; display:flex; flex-direction:column; gap:9px; border-top:1px solid rgba(125,165,180,0.1);" class="ss-flex-wrap">
+              <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Wind</span><span style="color:#eef4f7; font-weight:600;">19 kn · gusts 24</span></div>
+              <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Rider profile</span><span style="color:#eef4f7; font-weight:600;">Used when available</span></div>
+              <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Source status</span><span style="color:#ffd27a; font-weight:600;">Check freshness</span></div>
+              <div style="display:flex; justify-content:space-between; font-size:12.5px;" class="ss-flex-wrap"><span style="color:#9bb0bb;">Missing data</span><span style="color:#f0705c; font-weight:600;">May be unavailable</span></div>
+            </div>
+            <div style="padding:13px 17px 17px;">
+              <div style="text-align:center; font-size:13px; font-weight:700; color:#081521; background:#38bdf8; padding:12px; border-radius:10px;">Start session</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEOPLE -->
+  <section style="max-width:1280px; margin:0 auto; padding:80px 32px 30px;" class="ss-mobile-padding">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:14px;">SCHOOL AND SUPPORT WORKFLOWS</div>
+    <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:38px; letter-spacing:-0.02em; margin:0 0 40px; color:#f5f9fb; max-width:720px;">Share useful context with the people around the ride.</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;" class="ss-layout-grid">
+      <div style="padding:28px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-size:24px; margin-bottom:12px;">👥</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:20px; color:#f5f9fb; margin-bottom:10px;">Trusted contacts</div>
+        <p style="margin:0; font-size:14.5px; color:#c2d3dd; line-height:1.65;">Supported alerts can reach configured in-app, email or linked Companion routes. A delivered message does not prove that anyone received or acted on it.</p>
+      </div>
+      <div style="padding:28px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-size:24px; margin-bottom:12px;">🏫</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:20px; color:#f5f9fb; margin-bottom:10px;">Instructor link</div>
+        <p style="margin:0; font-size:14.5px; color:#c2d3dd; line-height:1.65;">School Mode supports a private roster and session-based location sharing when riders consent. Spoken instructor messages and calling are not available.</p>
+      </div>
+      <div style="padding:28px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-size:24px; margin-bottom:12px;">🤝</div>
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:20px; color:#f5f9fb; margin-bottom:10px;">Crew &amp; groups</div>
+        <p style="margin:0; font-size:14.5px; color:#c2d3dd; line-height:1.65;">Moving group zones, falling-behind Watchdogs and voice coordination are planned. They are not current SmartSurf features.</p>
+      </div>
+    </div>
+    <div style="margin-top:20px; padding:22px 24px; background:#0e2330; border:1px solid rgba(125,165,180,0.14); border-radius:14px;" class="ss-mobile-padding">
+      <p style="margin:0; font-size:14.5px; color:#c2d3dd; line-height:1.65;"><strong style="color:#f5f9fb;">A clear boundary:</strong> SmartSurf supports rider judgement. It does not guarantee message delivery, personal safety, equipment recovery or rescue. Use established safety equipment, supervision and local procedures.</p>
+    </div>
+  </section>
+
+  <!-- STAGES -->
+  <section id="stages" style="background:#0e2330; border-top:1px solid rgba(125,165,180,0.1);">
+    <div style="max-width:1080px; margin:0 auto; padding:80px 32px;" class="ss-mobile-padding">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:14px;">AVAILABLE · IN DEVELOPMENT · PLANNED</div>
+      <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0 0 14px; color:#f5f9fb;">What works today, and what is still taking shape.</h2>
+      <p style="font-size:16px; color:#adc1cc; max-width:620px; margin:0 0 40px; line-height:1.6;">Core condition monitoring and text-based spot assistance are available. Spoken interactions and broader coordination depend on future Companion releases and field validation.</p>
+      <div style="display:flex; flex-direction:column;" class="ss-flex-wrap">
+        <div style="display:grid; grid-template-columns:170px 1fr; gap:28px; padding:22px 0; border-top:1px solid rgba(125,165,180,0.12);" class="ss-layout-grid ss-mobile-padding">
+          <div><div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#8fd0f5; margin-bottom:5px;">AVAILABLE NOW</div></div>
+          <div><div style="font-weight:700; font-size:16.5px; margin-bottom:5px; color:#f5f9fb;">Positions, Watchdogs and text answers</div><div style="font-size:14px; color:#9bb0bb; line-height:1.6;">Web app, Android phone location reporting, configured wind/wave Watchdogs, text-based Ask SmartSurf, and consent-based school roster and session tools.</div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:170px 1fr; gap:28px; padding:22px 0; border-top:1px solid rgba(125,165,180,0.12);" class="ss-layout-grid ss-mobile-padding">
+          <div><div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#8fd0f5; margin-bottom:5px;">IN DEVELOPMENT</div></div>
+          <div><div style="font-weight:700; font-size:16.5px; margin-bottom:5px; color:#f5f9fb;">Voice Copilot</div><div style="font-size:14px; color:#9bb0bb; line-height:1.6;">End-to-end spoken alerts, hands-free questions, wake-word activation and local speech commands require a compatible Companion release and on-water validation.</div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:170px 1fr; gap:28px; padding:22px 0; border-top:1px solid rgba(125,165,180,0.12);" class="ss-layout-grid ss-mobile-padding">
+          <div><div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#a5e6f7; margin-bottom:5px;">HARDWARE PAIR</div></div>
+          <div><div style="font-weight:700; font-size:16.5px; margin-bottom:5px; color:#f5f9fb;">Rider + board tracking</div><div style="font-size:14px; color:#9bb0bb; line-height:1.6;">When two devices are paired and both report fresh positions, SmartSurf can evaluate a configured separation rule. A position or alert cannot confirm that a person is safe. <a href="Tracker.dc.html" style="color:#a5e6f7; font-weight:600;">See the Tracker →</a></div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:170px 1fr; gap:28px; padding:22px 0; border-top:1px solid rgba(125,165,180,0.12); border-bottom:1px solid rgba(125,165,180,0.12);" class="ss-layout-grid ss-mobile-padding">
+          <div><div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#71889a; margin-bottom:5px;">PLANNED</div></div>
+          <div><div style="font-weight:700; font-size:16.5px; margin-bottom:5px; color:#f5f9fb;">Expanded school and group awareness</div><div style="font-size:14px; color:#9bb0bb; line-height:1.6;">Moving group zones, falling-behind Watchdogs, expanded equipment workflows and rescue-team coordination are planned, not available.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREE / PAID PRINCIPLE -->
+  <section style="max-width:1080px; margin:0 auto; padding:80px 32px;" class="ss-mobile-padding">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#38bdf8; margin-bottom:14px;">CURRENT PRODUCT STATUS</div>
+    <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0 0 36px; color:#f5f9fb;">Start with the tools that are available today.</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;" class="ss-layout-grid">
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(47,190,143,0.3); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#f5f9fb; margin-bottom:6px;">SmartSurf app</div>
+        <div style="font-size:12.5px; color:#7ee0b4; font-family:'JetBrains Mono',monospace; margin-bottom:14px;">FREE TO START</div>
+        <div style="font-size:13.5px; color:#c2d3dd; line-height:1.9;">Saved spots and available conditions<br>Android phone location reporting<br>Text-based SmartSurf answers<br>Session and tracker context</div>
+      </div>
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#f5f9fb; margin-bottom:6px;">Intelligence Pro</div>
+        <div style="font-size:12.5px; color:#ffd27a; font-family:'JetBrains Mono',monospace; margin-bottom:14px;">NEW PURCHASES PAUSED</div>
+        <div style="font-size:13.5px; color:#c2d3dd; line-height:1.9;">Personal spot briefings<br>Wind and wave Watchdogs<br>Text SmartSurf Agent<br>$4.99 / 30 days or $39 / 12 months<br>No automatic renewal</div>
+      </div>
+      <div style="padding:26px; background:#0e2836; border:1px solid rgba(125,165,180,0.16); border-radius:16px;" class="ss-mobile-padding">
+        <div style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:19px; color:#f5f9fb; margin-bottom:6px;">Schools &amp; instructors</div>
+        <div style="font-size:12.5px; color:#8ba0ac; font-family:'JetBrains Mono',monospace; margin-bottom:14px;">SETUP BY ENQUIRY</div>
+        <div style="font-size:13.5px; color:#c2d3dd; line-height:1.9;">Private roster and instructor tools<br>Rider-consented location sharing<br>Active-session scope<br>Expanded group features planned</div>
+      </div>
+    </div>
+    <p style="margin:18px 0 0; font-size:12.5px; color:#71889a; line-height:1.6; max-width:820px;">The published Pro prices describe one-time access periods without automatic renewal. New Pro checkout is currently paused. Hands-free Voice Copilot, voice SOS and expanded group coordination are not available. SmartSurf supports judgement; it does not replace rescue services or required safety equipment.</p>
+  </section>
+
+  <!-- CTA -->
+  <section style="position:relative; overflow:hidden; border-top:1px solid rgba(125,165,180,0.1);">
+    <div style="position:absolute; inset:0; background:radial-gradient(70% 120% at 50% 0%, rgba(47,159,224,0.09), transparent 60%);"></div>
+    <div style="position:relative; max-width:780px; margin:0 auto; padding:88px 32px; text-align:center;" class="ss-mobile-padding">
+      <h2 style="font-family:'Schibsted Grotesk',sans-serif; font-weight:800; font-size:38px; letter-spacing:-0.02em; margin:0 0 16px; color:#f5f9fb;">Start with the SmartSurf app.</h2>
+      <p style="font-size:17px; color:#c2d3dd; margin:0 0 30px; line-height:1.6;">Open the web app, or install the Android Companion to report your phone’s position. Add a SmartSurf Tracker when you want an independent position for your board.</p>
+      <div style="display:flex; gap:13px; justify-content:center; flex-wrap:wrap;" class="ss-flex-wrap">
+        <a href="https://app.smartsurf.cloud/" style="font-size:16px; font-weight:800; color:#081521; background:#38bdf8; padding:15px 28px; border-radius:12px;" style-hover="background:#57c4fa; color:#081521;" class="ss-mobile-padding">Open SmartSurf</a>
+        <a href="Tracker.dc.html" style="font-size:16px; font-weight:600; color:#e6eef3; border:1px solid rgba(125,165,180,0.24); padding:15px 28px; border-radius:12px;" style-hover="background:rgba(255,255,255,0.05); color:#e6eef3;" class="ss-mobile-padding">See the Tracker →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#06121b; border-top:1px solid rgba(125,165,180,0.1);">
+    <div style="max-width:1280px; margin:0 auto; padding:40px 32px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; align-items:center; font-size:12.5px; color:#71889a;" class="ss-flex-wrap ss-mobile-padding">
+      <span>© 2026 SmartSurf · Senlay. Built in Hoi An, Vietnam.</span>
+      <div style="display:flex; gap:20px;" class="ss-flex-wrap"><a href="SmartSurf.dc.html" style-hover="color:#eef4f7;">SmartSurf</a><a href="Tracker.dc.html" style-hover="color:#eef4f7;">Tracker</a><a href="https://senlay.world/" style-hover="color:#eef4f7;">Senlay</a><a href="https://app.smartsurf.cloud/access.html?mode=signup" style-hover="color:#eef4f7;">Create an account</a></div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>
