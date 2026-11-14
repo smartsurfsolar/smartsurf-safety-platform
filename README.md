@@ -4,6 +4,14 @@ SmartSurf is a watersports safety and tracking platform built on top of Traccar 
 
 This public repository contains the reproducible SmartSurf source, UI customization, database schema foundation, and deployment templates. It does not contain production secrets, databases, logs, certificates, live backups, or server-only runtime files.
 
+## Current public development
+
+The latest Companion browser sources and marketing templates are in [`companion-ui/`](companion-ui/README.md). They include rider, activation, billing, account and administrative interfaces. They require matching SmartSurf backend services and are not a standalone server release.
+
+[Browse the Companion update](https://github.com/smartsurfsolar/smartsurf-safety-platform/tree/publish/companion-ui-20261114/companion-ui) · [Review proposed updates](https://github.com/smartsurfsolar/smartsurf-safety-platform/pulls) · [Explore SmartSurf](https://smartsurf.cloud/)
+
+The Traccar-based source documented below is preserved separately from these newer Companion interfaces. Public source availability does not establish field validation.
+
 ## Product Summary
 
 SmartSurf combines:
