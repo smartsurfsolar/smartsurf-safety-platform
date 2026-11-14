@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Connect companion · SmartSurf</title>
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    body{min-height:100vh;margin:0;background:#07131f;color:#eef6ff;font:16px/1.55 Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px;box-sizing:border-box}
+    .card{width:min(100%,560px);background:#0d1e2d;border:1px solid #24435a;border-radius:16px;padding:28px;box-sizing:border-box;box-shadow:0 24px 80px #0005}
+    .eyebrow{color:#70c9ee;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700}
+    h1{font-size:28px;line-height:1.2;margin:8px 0 12px}.muted{color:#a8bfd2}.details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.detail{padding:14px;background:#10283a;border:1px solid #1d3b51;border-radius:10px}.detail small{display:block;color:#8eafc7;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.detail strong{display:block;margin-top:4px;overflow-wrap:anywhere}.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.button{border:0;border-radius:9px;padding:12px 18px;font:inherit;font-weight:700;color:#062033;background:#31c5e9;cursor:pointer}.button:disabled{opacity:.55;cursor:wait}.link{color:#72cdf2;text-decoration:none}.message{padding:13px 15px;background:#10283a;border:1px solid #24435a;border-radius:9px}.error{border-color:#956228;background:#231e19}.success{border-color:#167a5a;background:#0c2522}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <main class="card" aria-labelledby="title">
+    <div class="eyebrow">SmartSurf account</div>
+    <h1 id="title">Connect your companion app</h1>
+    <p class="muted" id="intro">Review the device details before linking it to your account.</p>
+    <section id="details" class="details hidden" aria-label="Device details">
+      <div class="detail"><small>Device</small><strong id="device"></strong></div>
+      <div class="detail"><small>Platform</small><strong id="platform"></strong></div>
+      <div class="detail"><small>App version</small><strong id="version"></strong></div>
+      <div class="detail"><small>Link expires</small><strong id="expires"></strong></div>
+    </section>
+    <p id="message" class="message" role="status" aria-live="polite">Checking this link…</p>
+    <div class="actions">
+      <button id="confirm" class="button hidden" type="button">Confirm connection</button>
+      <a id="back" class="link" href="/rider.html">Back to SmartSurf</a>
+    </div>
+  </main>
+  <script>
+    (() => {
+      const $ = id => document.getElementById(id);
+      const message = $('message');
+      const button = $('confirm');
+      const params = new URLSearchParams(location.search);
+      let code = params.get('code') || '';
+      if (code) {
+        try { sessionStorage.setItem('smartsurf_companion_code', code); } catch {}
+        history.replaceState(null, '', location.pathname);
+      } else {
+        try { code = sessionStorage.getItem('smartsurf_companion_code') || ''; } catch {}
+      }
+      try { sessionStorage.removeItem('smartsurf_companion_code'); } catch {}
+      const showMessage = (text, kind = '') => { message.textContent = text; message.className = `message ${kind}`.trim(); };
+      const request = async (path, options = {}) => {
+        const response = await fetch(path, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(options.headers || {}) } });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const error = new Error(typeof data.error === 'string' ? data.error : 'The request could not be completed.');
+          error.status = response.status;
+          throw error;
+        }
+        return data;
+      };
+      const fail = error => {
+        if (error.status === 401) {
+          try { sessionStorage.setItem('smartsurf_companion_code', code); } catch {}
+          const next = encodeURIComponent('companion-confirm.html');
+          location.replace(`/access.html?mode=signin&next=${next}`);
+          return;
+        }
+        $('details').classList.add('hidden');
+        button.classList.add('hidden');
+        showMessage(error.status === 404 || error.status === 410
+          ? 'This connection link has expired or is no longer valid. Start again in the companion app.'
+          : 'We could not verify this connection link. Please start again in the companion app.', 'error');
+      };
+      if (!/^[A-Za-z0-9_-]{43}$/.test(code)) {
+        showMessage('This connection link is missing or invalid. Start again in the companion app.', 'error');
+        return;
+      }
+      request('/api/auth/companion/token', { method: 'POST', body: '{}' })
+        .then(auth => {
+          return request(`/api/companion/link/confirm?code=${encodeURIComponent(code)}`, { headers: { Authorization: `Bearer ${auth.accessToken}` } });
+        })
+        .then(ticket => {
+          $('device').textContent = ticket.deviceId;
+          $('platform').textContent = ticket.platform;
+          $('version').textContent = ticket.appVersion;
+          $('expires').textContent = new Date(ticket.expiresAt).toLocaleString();
+          $('details').classList.remove('hidden');
+          if (ticket.status === 'expired' || ticket.status === 'denied') {
+            button.classList.add('hidden');
+            showMessage('This connection link has expired or was declined. Start again in the companion app.', 'error');
+            return;
+          }
+          if (ticket.status === 'linked') {
+            showMessage('This device is already connected to your account.', 'success');
+            return;
+          }
+          button.classList.remove('hidden');
+          showMessage('Nothing is linked until you select “Confirm connection”.');
+        })
+        .catch(fail);
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        try {
+          const auth = await request('/api/auth/companion/token', { method: 'POST', body: '{}' });
+          await request('/api/companion/link/confirm', { method: 'POST', headers: { Authorization: `Bearer ${auth.accessToken}` }, body: JSON.stringify({ code }) });
+          button.classList.add('hidden');
+          showMessage('Companion connected. You can return to the companion app.', 'success');
+        } catch (error) {
+          fail(error);
+        } finally {
+          button.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

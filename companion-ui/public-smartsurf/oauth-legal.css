@@ -1,0 +1,226 @@
+/* Google authentication controls, legal links, and public policy pages. */
+.google-auth-area {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.google-button {
+  min-height: 46px;
+  border: 1px solid #747775;
+  border-radius: 6px;
+  background: #fff;
+  color: #1f1f1f;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font: 500 14px/20px Arial, sans-serif;
+  letter-spacing: .01em;
+  transition: background-color .18s, border-color .18s, box-shadow .18s;
+}
+
+.google-button:hover {
+  background: #f8faff;
+  border-color: #5f6368;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+}
+
+.google-button:focus-visible {
+  outline: 3px solid rgba(56, 189, 248, .35);
+  outline-offset: 2px;
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  background: var(--line);
+  flex: 1;
+}
+
+.auth-legal {
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.auth-legal a,
+.footer a,
+.legal-card a {
+  color: var(--acc);
+  text-decoration: underline;
+  text-decoration-color: rgba(56, 189, 248, .45);
+  text-underline-offset: 3px;
+}
+
+.auth-legal a:hover,
+.footer a:hover,
+.legal-card a:hover {
+  color: #8edbff;
+}
+
+.footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.account-connections {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.account-connections h3 {
+  margin: 0 0 5px;
+}
+
+.account-connections p {
+  margin: 0;
+  max-width: 720px;
+}
+
+.account-connections .google-button {
+  flex: 0 0 auto;
+}
+
+.legal-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 64px 24px 90px;
+}
+
+.legal-heading {
+  margin-bottom: 28px;
+}
+
+.legal-heading h1 {
+  font-size: clamp(38px, 6vw, 62px);
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  margin: 0 0 12px;
+}
+
+.legal-heading .effective-date {
+  color: var(--muted);
+  margin: 0;
+}
+
+.legal-card {
+  background: rgba(13, 30, 47, .95);
+  border: 1px solid #285272;
+  border-radius: 12px;
+  padding: clamp(24px, 5vw, 52px);
+}
+
+.legal-card h2 {
+  font-size: 25px;
+  letter-spacing: -.02em;
+  margin: 38px 0 10px;
+}
+
+.legal-card h2:first-child {
+  margin-top: 0;
+}
+
+.legal-card h3 {
+  font-size: 17px;
+  margin: 24px 0 8px;
+}
+
+.legal-card p,
+.legal-card li {
+  color: var(--muted);
+}
+
+.legal-card ul {
+  padding-left: 22px;
+}
+
+.legal-card li + li {
+  margin-top: 7px;
+}
+
+.legal-callout {
+  border-left: 3px solid var(--acc);
+  background: rgba(56, 189, 248, .07);
+  padding: 14px 16px;
+  margin: 20px 0;
+}
+
+.legal-callout p {
+  margin: 0;
+}
+
+.legal-top-actions {
+  margin-left: auto;
+}
+
+.legal-top-actions a {
+  color: var(--muted);
+}
+
+.legal-top-actions a:hover {
+  color: var(--acc);
+}
+
+@media (max-width: 700px) {
+  .footer-meta {
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .account-connections {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .legal-main {
+    padding: 42px 18px 64px;
+  }
+
+  .legal-card {
+    padding: 24px 20px;
+  }
+
+  .legal-top-actions {
+    font-size: 13px;
+  }
+}
+
+/* Live context chart and mobile dashboard navigation. */
+.live-chart svg { position: absolute; inset: 0; width: 100%; height: calc(100% - 28px); padding: 10px 4px 0; }
+.live-chart polyline { fill: none; stroke-width: 1.8; vector-effect: non-scaling-stroke; }
+.live-chart .chart-forecast { stroke: var(--acc); stroke-dasharray: 5 4; }
+.live-chart .chart-observed { stroke: var(--good); }
+.live-chart.chart-empty { display: flex; align-items: center; justify-content: center; padding: 20px; color: var(--muted); font-size: 13px; }
+.mobile-nav { display: none; }
+@media (max-width: 900px) {
+  .mobile-head { flex-wrap: wrap; }
+  .mobile-brand { display: flex; align-items: center; gap: 8px; }
+  .mobile-nav { display: flex; width: 100%; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .mobile-nav button { border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 5px; padding: 7px 9px; white-space: nowrap; font-size: 12px; }
+  .mobile-nav button:hover, .mobile-nav button:focus-visible { color: var(--acc); border-color: var(--acc); }
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartSurf — Rider and Board Safety Awareness</title>
+<meta name="description" content="See how SmartSurf combines independent rider and board positions, condition Watchdogs and available spot context. Hands-free Voice Copilot is in development.">
+<link rel="canonical" href="https://app.smartsurf.cloud/intelligence.html">
+<meta property="og:title" content="SmartSurf — Rider and Board Safety Awareness">
+<meta property="og:description" content="Independent rider and board positions, condition Watchdogs and available spot context. Voice Copilot is in development.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 var(--ss-font); padding:24px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-size:28px; margin:16px 0 6px; } h2 { font-size:20px; margin:24px 0 8px; }
+  p { color:var(--ink2); } .lead { font-size:18px; color:var(--ink); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--ss-r-3); padding:18px; margin:14px 0; }
+  .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; }
+  .m { background:#08192a; border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .m .v { font-size:22px; font-weight:700; } .m .l { color:var(--ink2); font-size:12px; }
+  .cta { display:block; text-align:center; padding:13px; border-radius:var(--ss-r-2); background:var(--ss-acc-grad); color:#04131c; font-weight:700; text-decoration:none; margin-top:12px; box-shadow:var(--ss-glow); }
+  .cta.ghost { background:transparent; color:var(--acc); border:1px solid var(--acc); }
+  .pill { display:inline-block; font-size:12px; color:#04131f; background:var(--good); border-radius:999px; padding:3px 10px; font-weight:700; }
+  .muted { color:var(--ink2); font-size:13px; }
+  .feature-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:16px 0; }
+  .feature { min-width:0; padding:13px; border:1px solid var(--line); border-radius:12px; background:#08192a; }
+  .feature-tag { color:var(--acc); font:600 10px/1.3 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+  .feature h3 { margin:6px 0 3px; font-size:15px; }
+  .feature p { margin:0; font-size:12.5px; }
+  .actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .actions .cta { margin-top:4px; }
+  @media(max-width:520px) { body { padding:18px 14px; } .feature-grid,.actions { grid-template-columns:1fr; } h1 { font-size:25px; } }
+  a.back { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.02em; }
+  a.back img { width:24px; height:24px; border-radius:7px; box-shadow:0 0 0 1px var(--line),var(--ss-glow); }
+  a.back .wm { background:linear-gradient(120deg,var(--ss-ink),var(--ss-acc-soft) 58%,var(--ss-acc-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+</style>
+<link rel="stylesheet" href="ui.css">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#081521">
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html"><img src="assets/brand-mark-128.png" alt="" width="24" height="24"><span class="wm">SmartSurf</span></a>
+  <span class="pill">Free demo</span>
+  <h1>SmartSurf Intelligence</h1>
+  <p class="lead">Track the rider. Track the board. Let SmartSurf watch configured conditions and explain the evidence available for your spot.</p>
+
+  <div class="card" id="demo">
+    <h2 style="margin-top:0">Live demo · Mui Ne</h2>
+    <p class="muted" id="demo-status">Loading live conditions from Senlay&hellip;</p>
+    <div class="metrics" id="demo-metrics" class="hidden"></div>
+    <p class="muted" id="demo-note"></p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Your tracking platform</h2>
+    <p class="muted">Open one workspace for live positions, device status, session history and safety alerts. Link an Android phone or use SmartSurf Tracker hardware.</p>
+    <div class="feature-grid">
+      <article class="feature"><span class="feature-tag">Platform access</span><h3>Live map and ride history</h3><p>See the latest reported position, its freshness and recorded routes for trackers linked to your account.</p></article>
+      <article class="feature"><span class="feature-tag">Alerts</span><h3>Know when status changes</h3><p>Receive supported in-app or email alerts for SOS, offline devices, low battery and geofence events.</p></article>
+      <article class="feature"><span class="feature-tag">Paired trackers</span><h3>Rider and board separation</h3><p>Pair two reporting devices, set a distance and timer, and get an alert when fresh positions meet that rule.</p></article>
+      <article class="feature"><span class="feature-tag">Ask SmartSurf</span><h3>Text answers today. Voice Copilot in development.</h3><p>Ask about a saved spot and the context available now. Hands-free questions, wake-word activation and spoken responses are not released yet.</p></article>
+    </div>
+    <div class="actions">
+      <a class="cta" href="rider.html">Open tracking platform</a>
+      <a class="cta ghost" href="preorder.html">Explore Tracker hardware</a>
+    </div>
+    <p class="muted">Phone and hardware tracking require a linked, reporting device and network coverage. Separation alerts require two paired trackers and fresh GPS fixes. Alerts can be delayed; SmartSurf is not an emergency or rescue service.</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Intelligence Pro</h2>
+    <p class="muted">Optional decision support for understanding conditions before you ride. Core tracking and supported tracker alerts remain separate from Pro.</p>
+    <ul>
+      <li>Personal briefings about saved spots and available conditions</li>
+      <li>Wind and wave Watchdogs for selected ranges and duration</li>
+      <li>Text SmartSurf Agent grounded in available spot context and rider profile</li>
+      <li>Supported in-app and email alerts for meaningful changes</li>
+      <li>Source freshness and missing evidence surfaced where available</li>
+    </ul>
+    <p class="muted"><strong>New Pro purchases are currently paused.</strong> Published prices are $39 for 12 months or $4.99 for 30 days, with no automatic renewal. Check this page for availability before purchasing.</p>
+    <a class="cta ghost" href="rider.html">Explore the SmartSurf app</a>
+    <p class="muted">Intelligence Pro is separate from Tracker hardware. Core GPS tracking and supported tracker alerts do not require Pro; hardware purchase and phone connectivity are separate. SmartSurf is decision support, not an emergency or rescue service.</p>
+  </div>
+  <p class="muted" style="text-align:center;margin-top:24px"><a href="index.html">Platform</a> · <a href="preorder.html">Tracker</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="mailto:smartsurfsolar@gmail.com">Contact</a></p>
+</div>
+
+<script src="commerce.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  window.SSCommerce.track('intelligence_demo_opened', {});
+
+  function metric(value, label) {
+    const box = document.createElement('div'); box.className = 'm';
+    const v = document.createElement('div'); v.className = 'v'; v.textContent = value;
+    const l = document.createElement('div'); l.className = 'l'; l.textContent = label;
+    box.append(v, l); return box;
+  }
+
+  fetch('/api/guest/assessment', {
+    method: 'POST', credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ lat: 10.9333, lng: 108.2833, activity: 'kitesurfing' })
+  }).then(r => r.json()).then(data => {
+    if (!data.recommendation) throw new Error('No assessment returned.');
+    const rec = data.recommendation;
+    const metrics = rec.metrics || {};
+    const wind = metrics.windKt != null ? Math.round(metrics.windKt) + ' kt' : 'Unavailable';
+    const gust = metrics.gustKt != null ? Math.round(metrics.gustKt) + ' kt' : 'Unavailable';
+    const waves = metrics.waveM != null ? Number(metrics.waveM).toFixed(1) + ' m' : 'Unavailable';
+    el('demo-status').textContent = rec.verdictLabel
+      ? `${rec.verdictLabel}. Live evidence for Mui Ne; always verify locally before entering the water.`
+      : 'Live evidence retrieved; no definitive assessment is available.';
+    el('demo-metrics').replaceChildren(
+      metric(wind, 'Wind'), metric(gust, 'Gusts'), metric(waves, 'Waves'), metric(rec.verdictLabel || 'Insufficient', 'Assessment')
+    );
+    el('demo-note').textContent = data.liveSenlay ? 'Live from Senlay Core. Pro adds personal briefings, wind/wave Watchdogs and text SmartSurf Agent tools. New Pro checkout is currently paused.' : 'Demo data.';
+  }).catch(() => { el('demo-status').textContent = 'Live demo is temporarily unavailable.'; });
+
+})();
+</script>
+</body>
+</html>

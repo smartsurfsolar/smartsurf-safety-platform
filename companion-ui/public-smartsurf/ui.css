@@ -1,0 +1,122 @@
+/* SmartSurf shared design tokens.
+ *
+ * One canonical token set for every surface. Values match the retained visual
+ * language (dark marine navy, cyan accent, Barlow + IBM Plex Mono) so loading
+ * this stylesheet does not change the current look; it makes the vocabulary
+ * shared and gives later screen work a single source to draw from.
+ *
+ * Loaded after the DesignCanvas runtime rebuilds <head> (see attachAppLinks in
+ * each page); a plain static <link> does not survive boot.
+ */
+
+:root {
+  /* ── colour ─────────────────────────────────────────────── */
+  --ss-bg: #081521;
+  --ss-panel: #0d1e2f;
+  --ss-panel-2: #12283c;
+  --ss-card: #16304a;
+  --ss-line: #1e3d59;
+  --ss-line-soft: #183048;
+  --ss-ink: #e6f0f8;
+  --ss-ink-2: #9db4c8;
+  --ss-ink-3: #8ba3b8;
+  --ss-acc: #38bdf8;
+  --ss-acc-soft: #7dd3fc;
+  --ss-acc-dim: #1d5b7a;
+  /* second accent + brand gradient: the SmartSurf identity, matched to the
+   * marine map's cyan/aqua telemetry palette */
+  --ss-acc-2: #22d3ee;
+  --ss-acc-grad: linear-gradient(135deg, var(--ss-acc), var(--ss-acc-2));
+  --ss-glow: 0 6px 20px rgba(34, 211, 238, .22);
+
+  /* status meaning is stable across the product */
+  --ss-good: #22c55e;
+  --ss-warn: #f59e0b;
+  --ss-bad: #ef4444;
+  --ss-learned: #a855f7;
+
+  /* ── type ───────────────────────────────────────────────── */
+  --ss-font: "Barlow", system-ui, -apple-system, sans-serif;
+  --ss-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ss-fs-xs: 10px;
+  --ss-fs-sm: 12.5px;
+  --ss-fs-md: 15px;
+  --ss-fs-lg: 17px;
+  --ss-fs-xl: clamp(21px, 2.4vw, 27px);
+  --ss-fs-2xl: clamp(26px, 3.4vw, 36px);
+  --ss-lh: 1.55;
+  --ss-track-label: .14em;
+
+  /* ── space — 8 px rhythm with 4 px fine steps ───────────── */
+  --ss-1: 4px;
+  --ss-2: 8px;
+  --ss-3: 12px;
+  --ss-4: 16px;
+  --ss-6: 24px;
+  --ss-8: 32px;
+  --ss-12: 48px;
+  --ss-card-pad: 16px;
+  --ss-gap: 12px;
+
+  /* ── shape + depth ──────────────────────────────────────── */
+  --ss-r-1: 6px;
+  --ss-r-2: 8px;
+  --ss-r-3: 12px;
+  --ss-r-pill: 999px;
+  --ss-border: 1px solid var(--ss-line);
+  --ss-border-soft: 1px solid var(--ss-line-soft);
+  --ss-shadow-1: 0 1px 2px rgba(3, 10, 18, .45);
+  --ss-shadow-2: 0 8px 24px rgba(3, 10, 18, .45);
+
+  /* ── focus (never removed, always visible) ──────────────── */
+  --ss-focus: 2px solid var(--ss-acc);
+  --ss-focus-offset: 2px;
+
+  /* ── controls: dense on desktop, 44 px on coarse pointers ─ */
+  --ss-ctl-h: 34px;
+  --ss-touch: 44px;
+
+  /* legacy aliases so existing page rules pick up the same values */
+  --bg: var(--ss-bg);
+  --panel: var(--ss-panel);
+  --panel2: var(--ss-panel-2);
+  --card: var(--ss-card);
+  --line: var(--ss-line);
+  --lineSoft: var(--ss-line-soft);
+  --ink: var(--ss-ink);
+  --ink2: var(--ss-ink-2);
+  --ink3: var(--ss-ink-3);
+  --acc: var(--ss-acc);
+  --accDim: var(--ss-acc-dim);
+  --good: var(--ss-good);
+  --warn: var(--ss-warn);
+  --bad: var(--ss-bad);
+  --font: var(--ss-font);
+  --mono: var(--ss-mono);
+}
+
+@media (pointer: coarse) {
+  :root { --ss-ctl-h: var(--ss-touch); }
+}
+
+/* Zero-specificity primitives: page-local rules always win, so this only gives
+ * new markup sensible defaults. */
+:where(.ss-lbl) {
+  font-size: var(--ss-fs-xs);
+  letter-spacing: var(--ss-track-label);
+  text-transform: uppercase;
+  color: var(--ss-ink-3);
+  font-weight: 600;
+}
+:where(.ss-mono) { font-family: var(--ss-mono); font-variant-numeric: tabular-nums; }
+:where(.ss-focusable):focus-visible { outline: var(--ss-focus); outline-offset: var(--ss-focus-offset); }
+:where(.ss-touch) { min-height: var(--ss-touch); min-width: var(--ss-touch); }
+
+@media (prefers-reduced-motion: reduce) {
+  :where(*), :where(*::before), :where(*::after) {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

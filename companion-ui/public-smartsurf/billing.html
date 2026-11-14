@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#081521">
+  <title>Subscription &amp; Billing — SmartSurf</title>
+  <link rel="icon" href="assets/favicon.ico" sizes="48x48">
+  <link rel="stylesheet" href="billing.css?v=20261003-billing-v1">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="rider.html" aria-label="Back to SmartSurf Rider"><span class="brandmark">S</span><span>SmartSurf</span></a>
+      <a class="back" href="rider.html">← Back to Rider</a>
+    </header>
+    <section class="page-head">
+      <p class="eyebrow">ACCOUNT · ACCESS</p>
+      <h1>Subscription &amp; Billing</h1>
+      <p>See what you have, what it costs, and what remains available if you stop paying.</p>
+    </section>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+    <section id="loading" class="panel loading">Loading your SmartSurf access…</section>
+    <section id="failure" class="panel error-panel" hidden>
+      <h2>We couldn’t load your subscription</h2>
+      <p id="failure-text">Please try again.</p>
+      <button id="retry" class="button primary">Retry</button>
+    </section>
+    <div id="content" hidden>
+      <section class="access-grid">
+        <article class="panel plan-card">
+          <div class="panel-top"><p class="eyebrow">CURRENT PLAN</p><span id="status-pill" class="status-pill">—</span></div>
+          <h2 id="plan-name">SmartSurf Basic</h2>
+          <p id="plan-detail" class="muted">Your account’s current SmartSurf services.</p>
+          <div id="renewal" class="renewal"></div>
+          <div id="trial-box" class="subtle-box" hidden></div>
+          <div id="payment-problem" class="payment-problem" hidden></div>
+          <div id="plan-actions" class="actions"></div>
+        </article>
+        <article class="panel hardware-card">
+          <div class="panel-top"><p class="eyebrow">SEPARATE FROM YOUR SUBSCRIPTION</p><span class="status-pill good">SAFETY STAYS ON</span></div>
+          <h2>SmartSurf Tracker Access</h2>
+          <p id="hardware-summary">Loading device access…</p>
+          <ul class="feature-list">
+            <li>Basic device management and live tracker status</li>
+            <li>Core tracking, SOS, and critical safety alerts</li>
+            <li>Hardware access does not expire with Pro</li>
+          </ul>
+          <p class="fine">A subscription never disables a purchased tracker or its baseline safety functions.</p>
+        </article>
+      </section>
+
+      <section class="panel section-panel">
+        <div class="section-heading"><div><p class="eyebrow">AVAILABLE UPGRADES</p><h2>SmartSurf for your next session</h2></div><span id="checkout-state" class="fine"></span></div>
+        <div id="plans" class="plans"></div>
+        <div id="promo" class="promo-row">
+          <label for="promo-code">Have a promo code?</label>
+          <div class="promo-controls"><input id="promo-code" autocomplete="off" maxlength="64" placeholder="Enter code"><button id="promo-check" class="button secondary">Check code</button></div>
+          <p id="promo-result" class="fine" aria-live="polite"></p>
+        </div>
+        <div id="upgrade-preview" class="preview" hidden></div>
+      </section>
+
+      <section class="panel section-panel">
+        <div class="section-heading"><div><p class="eyebrow">BILLING &amp; PAYMENT</p><h2>Payment settings</h2></div></div>
+        <div id="payment-summary" class="payment-summary"></div>
+        <p class="fine">SmartSurf does not store card numbers or security codes. Payment details are handled by the payment provider. Your current checkout uses a one-time access period and does not automatically charge you again.</p>
+      </section>
+
+      <section class="panel section-panel">
+        <div class="section-heading"><div><p class="eyebrow">PAYMENT HISTORY</p><h2>Recent payments and orders</h2></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="payments"></tbody></table></div>
+        <p id="empty-payments" class="muted" hidden>No payments or orders have been recorded for this account yet.</p>
+      </section>
+      <footer class="page-foot"><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="mailto:smartsurfsolar@gmail.com">Payment support</a></footer>
+    </div>
+  </main>
+  <dialog id="cancel-dialog" class="dialog">
+    <form method="dialog"><p class="eyebrow">CANCEL AUTO-RENEWAL</p><h2>Cancel SmartSurf Pro?</h2><p id="cancel-explainer">Your Pro access remains available until the current period ends. Your tracker, history, and safety functions continue working.</p><div class="dialog-actions"><button value="keep" class="button secondary">Keep Pro</button><button id="cancel-confirm" value="confirm" class="button danger">Cancel renewal</button></div></form>
+  </dialog>
+  <script src="billing-center.js?v=20261003-billing-v1" defer></script>
+</body>
+</html>

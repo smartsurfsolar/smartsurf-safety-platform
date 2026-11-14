@@ -1,0 +1,11 @@
+/* Current shield/wave identity; apply without changing operational status colours. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Schibsted+Grotesk:wght@500;600;700;800&display=swap');
+:root{--brand-cyan:#38bdf8;--brand-aqua:#22d3ee;--brand-gradient:linear-gradient(135deg,#38bdf8,#22d3ee);--orange:#38bdf8;--cyan:#38bdf8;--bg:#081521;--panel:#0d1e2f;--ink:#e6f0f8;--muted:#abc0cc}
+.btn-buy,.btn-app{background:var(--brand-gradient);border-color:#38bdf8;color:#04121c}
+.btn-buy:hover,.btn-app:hover{background:linear-gradient(135deg,#7dd3fc,#67e8f9);border-color:#7dd3fc}
+.site-brand-mark{display:inline-block;width:30px;height:30px;object-fit:contain;vertical-align:middle;flex:none;background:transparent!important;border:0!important;border-radius:0!important}
+.brand-mark.site-brand-mark{min-width:30px}
+.tag-preorder{color:#a5e6f7;border-color:#355d73}
+body.public-brand{background:#081521;color:#e6f0f8;font-family:Barlow,system-ui,sans-serif}
+body.public-brand h1,body.public-brand h2,body.public-brand h3{font-family:'Schibsted Grotesk',system-ui,sans-serif}
+body.public-brand .brand-mark{background:transparent;box-shadow:none}

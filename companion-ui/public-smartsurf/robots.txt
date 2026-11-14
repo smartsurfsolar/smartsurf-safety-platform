@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /access.html
+Disallow: /activate.html
+Disallow: /checkout.html
+Disallow: /instructor.html
+Disallow: /rider.html
+Disallow: /school.html
+
+Sitemap: https://app.smartsurf.cloud/sitemap.xml

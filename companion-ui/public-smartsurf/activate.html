@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<title>Activate your SmartSurf tracker</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 var(--ss-font); padding:24px 24px calc(140px + env(safe-area-inset-bottom)); }
+  .wrap { max-width:560px; margin:0 auto; }
+  h1 { font-size:24px; margin:8px 0 4px; } p.sub { color:var(--ink2); margin:0 0 20px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--ss-r-3); padding:20px; margin-bottom:16px; }
+  label { display:block; font-size:13px; color:var(--ink2); margin-bottom:6px; }
+  input, select { width:100%; padding:12px 14px; border-radius:10px; border:1px solid #24435d; background:#08192a; color:var(--ink); font-size:16px; }
+  .grid { display:grid; grid-template-columns:1.2fr 1fr; gap:12px; }
+  button { width:100%; padding:14px; border-radius:var(--ss-r-2); border:0; background:var(--ss-acc-grad); color:#04131f; font-size:16px; font-weight:700; cursor:pointer; margin-top:8px; }
+  .ghost { background:transparent; color:var(--acc); border:1px solid var(--acc); }
+  .dev { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-top:10px; }
+  .dev strong,.dev span { min-width:0; max-width:100%; overflow-wrap:anywhere; }
+  .dev span { color:var(--ink2); font-size:13px; }
+  .msg { margin-top:12px; font-size:14px; padding:12px; border-radius:10px; display:none; }
+  .msg.err { display:block; background:#3b1418; color:#ffb4b4; }
+  .msg.ok { display:block; background:#0d3324; color:#8ef0c0; }
+  a.back { color:var(--acc); text-decoration:none; font-size:14px; }
+  .activation-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .activation-nav .back { display:inline-flex; align-items:center; gap:6px; min-height:44px; }
+  .activation-nav svg { width:16px; height:16px; flex:none; }
+  .setup-return { position:fixed; z-index:20; left:50%; bottom:0; transform:translateX(-50%); width:min(560px,calc(100% - 48px)); padding:12px 0 max(12px,env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--bg); box-shadow:0 -10px 24px var(--bg); }
+  .setup-return p { margin:0 0 7px; color:var(--ink2); font-size:13px; text-align:center; }
+  a.overview-button { display:flex; align-items:center; justify-content:center; min-height:48px; padding:12px 16px; border-radius:var(--ss-r-2); background:var(--ss-acc-grad); color:#04131f; font-size:16px; font-weight:700; text-decoration:none; }
+  a.overview-button[aria-disabled="true"] { opacity:.65; cursor:wait; }
+  a.back:focus-visible,a.overview-button:focus-visible { outline:2px solid var(--acc); outline-offset:4px; }
+  a.brandlink { display:inline-flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:700; letter-spacing:-.02em; }
+  a.brandlink img { border-radius:7px; box-shadow:0 0 0 1px var(--line),var(--ss-glow); flex:none; }
+  a.brandlink .wm { background:linear-gradient(120deg,var(--ss-ink),var(--ss-acc-soft) 58%,var(--ss-acc-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hidden { display:none; }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .choice { margin:0; min-height:110px; text-align:left; border:1px solid var(--line); background:#08192a; color:var(--ink); padding:14px; }
+  .choice strong { display:block; font-size:15px; margin-bottom:5px; }.choice span { display:block; color:var(--ink2); font-size:12px; line-height:1.45; font-weight:400; }
+  .choice.on { border-color:var(--acc); background:#0b2a42; box-shadow:0 0 0 1px rgba(56,189,248,.2) inset; }
+  .setup-code { display:flex; align-items:center; gap:8px; background:#08192a; border:1px solid #24435d; border-radius:10px; padding:10px 12px; margin:6px 0 14px; }
+  .setup-code code { flex:1; overflow-wrap:anywhere; color:#8ef0c0; font-size:13px; }.setup-code button { width:auto; margin:0; padding:7px 10px; font-size:13px; }
+  .steps { color:var(--ink2); padding-left:20px; margin:8px 0 0; font-size:14px; }.steps li { margin:7px 0; }
+  @media(max-width:520px){.choices,.grid{grid-template-columns:1fr}}
+</style>
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#081521">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div class="wrap">
+  <nav class="activation-nav" aria-label="Setup navigation">
+    <a class="brandlink" href="index.html"><img src="assets/brand-mark-128.png" alt="" width="24" height="24"><span class="wm">SmartSurf</span></a>
+    <a class="back" href="rider.html?screen=tracker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg>Back to Overview</a>
+  </nav>
+  <h1>Add a tracker</h1>
+  <p class="sub">Connect purchased tracker hardware or a phone tracker app. Both appear in your private SmartSurf map.</p>
+
+  <div id="need-login" class="card hidden">
+    <p>Sign in with the email you used at checkout to activate your tracker.</p>
+    <a class="back" href="access.html">Sign in &rarr;</a>
+  </div>
+
+  <div id="activate" class="hidden">
+    <div class="card" id="type-choice">
+      <label>What are you connecting?</label>
+      <div class="choices">
+        <button type="button" class="choice on" data-mode="hardware"><strong>Tracker hardware</strong><span>Use the serial or IMEI printed on your SmartSurf tracker or its box. A paid hardware order is required.</span></button>
+        <button type="button" class="choice" data-mode="phone"><strong>Phone tracker app</strong><span>Link the tracker app already installed on a phone. It becomes a private SmartSurf tracker.</span></button>
+      </div>
+    </div>
+
+    <div id="hardware-flow">
+    <div class="card">
+      <div class="grid">
+        <div><label>Device name</label><input id="d-name" placeholder="Viktor Rider"></div>
+        <div><label>Role</label>
+          <select id="d-role">
+            <option value="rider">Rider</option>
+            <option value="board">Board</option>
+            <option value="foil">Foil</option>
+            <option value="sup">SUP</option>
+            <option value="equipment">Equipment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <label>Serial / IMEI (on the tracker or its box)</label>
+      <input id="d-serial" inputmode="numeric" placeholder="15-digit IMEI or serial">
+      <button type="button" id="add-btn" class="ghost">Add to activation list</button>
+      <div id="devices"></div>
+    </div>
+    <div class="card">
+      <label>Trusted contact (optional)</label>
+      <input id="d-contact" placeholder="Name and phone / email">
+      <button type="button" id="save-btn">Activate devices</button>
+      <div id="msg" class="msg" role="alert"></div>
+    </div>
+    </div>
+
+    <div id="phone-flow" class="hidden">
+      <div class="card">
+        <h1 style="font-size:19px">Link your phone tracker app</h1>
+        <p class="sub" style="margin-bottom:14px">Use the separate tracker app already installed on your phone. Enter the identification number it already shows, and SmartSurf links that tracker to your private map. No hardware purchase is required for one personal phone tracker.</p>
+        <label>Tracker name <span style="color:var(--ink2);font-weight:400">(only needed the first time)</span></label>
+        <input id="phone-name" placeholder="Viktor’s phone">
+        <label>Identification number from the phone app</label>
+        <input id="phone-input-identifier" inputmode="numeric" autocomplete="off" placeholder="e.g. 37918572">
+        <p class="sub" style="font-size:12px;margin:-3px 0 14px">Open the phone tracker app and copy the number shown under “Device identifier”.</p>
+        <button type="button" id="phone-btn">Link this phone tracker</button>
+        <div id="phone-msg" class="msg"></div>
+      </div>
+      <div id="phone-setup" class="card hidden">
+        <h1 style="font-size:19px">Finish setup in the phone tracker app</h1>
+        <p class="sub" style="margin-bottom:14px">Keep these values private. They identify this phone to your SmartSurf account.</p>
+        <label>Device identifier</label>
+        <div class="setup-code"><code id="phone-identifier"></code><button type="button" class="ghost" data-copy="phone-identifier">Copy</button></div>
+        <label>Server URL</label>
+        <div class="setup-code"><code id="phone-server"></code><button type="button" class="ghost" data-copy="phone-server">Copy</button></div>
+        <p id="phone-transport-note" class="sub hidden" style="margin:0 0 14px;color:#fbbf24">This private pilot receiver is not yet protected by a custom TLS hostname. Use it only for testing until the secure address is published.</p>
+        <ol class="steps" id="phone-steps"></ol>
+        <button type="button" id="phone-check" class="ghost">Check phone connection</button>
+        <div id="phone-connection" class="msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="done" class="card hidden">
+    <h1 id="done-title">Received</h1>
+    <p class="sub" id="done-body"></p>
+    <a class="back" href="intelligence.html">Try SmartSurf Intelligence (free demo) &rarr;</a>
+  </div>
+  <div class="setup-return">
+    <p id="pending-summary" class="hidden" role="status"></p>
+    <a id="overview-link" class="overview-button" href="rider.html?screen=tracker">Go to Overview</a>
+  </div>
+</div>
+
+<script src="commerce.js"></script>
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const devices = [];
+  let phoneDeviceId = null;
+  let savingDevices = false;
+  const overviewUrl = id => 'rider.html?screen=tracker&refresh=1' + (Number.isSafeInteger(Number(id)) && Number(id) > 0 ? '&trackerId=' + Number(id) : '');
+  function escapeHtml(s) { return String(s).replace(/[<>&"']/g, c => ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;' }[c])); }
+  function render() {
+    el('devices').innerHTML = devices.map((d, i) => `<div class="dev"><strong>${escapeHtml(d.name)}</strong><span>${escapeHtml(d.role)} · ${escapeHtml(d.serial)}</span><button type="button" class="ghost" data-i="${i}" style="width:auto;margin:0;padding:6px 10px">Remove</button></div>`).join('');
+    el('devices').querySelectorAll('button[data-i]').forEach(b => b.onclick = () => { devices.splice(Number(b.dataset.i), 1); render(); });
+    el('overview-link').textContent = devices.length ? 'Save & go to Overview' : 'Go to Overview';
+    el('pending-summary').classList.toggle('hidden', !devices.length);
+    el('pending-summary').textContent = devices.length ? `${devices.length} tracker${devices.length === 1 ? '' : 's'} waiting to be saved` : '';
+  }
+
+  function setMode(mode) {
+    const phone = mode === 'phone';
+    el('hardware-flow').classList.toggle('hidden', phone);
+    el('phone-flow').classList.toggle('hidden', !phone);
+    document.querySelectorAll('[data-mode]').forEach(button => button.classList.toggle('on', button.dataset.mode === mode));
+  }
+  document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () => setMode(button.dataset.mode));
+
+  el('add-btn').onclick = async () => {
+    const name = el('d-name').value.trim();
+    const serial = el('d-serial').value.trim();
+    const msg = el('msg');
+    if (!name) { msg.className = 'msg err'; msg.textContent = 'Enter a device name.'; return; }
+    if (!/^[A-Za-z0-9-]{6,32}$/.test(serial)) { msg.className = 'msg err'; msg.textContent = 'Enter a valid serial or IMEI (6–32 letters/numbers).'; return; }
+    // Native Companion identifiers are phone trackers, not purchased hardware.
+    // Use the existing phone registration path so they do not consume an order.
+    if (/^ss-[0-9a-f]{12}$/i.test(serial) || /^SSPHONE-/i.test(serial)) {
+      setMode('phone');
+      el('phone-name').value = name;
+      el('phone-input-identifier').value = serial;
+      return el('phone-btn').onclick();
+    }
+    devices.push({ name, role: el('d-role').value, serial });
+    el('d-name').value = ''; el('d-serial').value = '';
+    msg.className = 'msg'; msg.textContent = '';
+    render();
+  };
+
+  async function saveDevices() {
+    if (savingDevices) return null;
+    const msg = el('msg');
+    if (!devices.length) { msg.className = 'msg err'; msg.textContent = 'Add at least one device.'; return null; }
+    savingDevices = true;
+    el('save-btn').disabled = true;
+    el('overview-link').setAttribute('aria-disabled', 'true');
+    try {
+      msg.className = 'msg'; msg.textContent = '';
+      const result = await window.SSCommerce.post('/api/activate', { devices, trustedContact: el('d-contact').value });
+      window.SSCommerce.track('tracker_activated', { count: devices.length, status: result.status, provisioningConfigured: result.provisioningConfigured });
+      const body = result.status === 'active'
+        ? 'Your devices are live on the SmartSurf tracking platform.'
+        : result.status === 'provisioning_failed'
+          ? 'We saved your tracker details, but the tracking platform could not be reached. Support will finish provisioning and contact you.'
+          : 'We received your tracker details. Provisioning is in progress and we will notify you when your devices are live.';
+      el('done-title').textContent = result.status === 'active' ? "You're live." : 'Received';
+      el('done-body').textContent = body;
+      el('overview-link').href = overviewUrl(result.devices?.[0]?.id);
+      devices.length = 0;
+      render();
+      el('activate').classList.add('hidden');
+      el('done').classList.remove('hidden');
+      return result;
+    } catch (e) {
+      msg.className = 'msg err'; msg.textContent = e.message || 'Could not activate.';
+      msg.scrollIntoView({ block: 'center' });
+      return null;
+    } finally {
+      savingDevices = false;
+      el('save-btn').disabled = false;
+      el('overview-link').removeAttribute('aria-disabled');
+    }
+  }
+  el('save-btn').onclick = () => saveDevices();
+  el('overview-link').onclick = async event => {
+    if (!devices.length && !savingDevices) return;
+    event.preventDefault();
+    if (savingDevices) return;
+    const result = await saveDevices();
+    if (result) location.assign(el('overview-link').href);
+  };
+
+  el('phone-btn').onclick = async ({ replace = false } = {}) => {
+    const msg = el('phone-msg');
+    const name = el('phone-name').value.trim();
+    const identifier = el('phone-input-identifier').value.trim();
+    const button = el('phone-btn');
+    button.disabled = true;
+    try {
+      msg.className = 'msg'; msg.textContent = '';
+      const result = await window.SSCommerce.post('/api/tracker/phone', { name, identifier, replace });
+      const setup = result.setup || {};
+      phoneDeviceId = result.device && result.device.id;
+      el('overview-link').href = overviewUrl(phoneDeviceId);
+      el('phone-identifier').textContent = setup.deviceIdentifier || '';
+      el('phone-server').textContent = setup.serverUrl || '';
+      el('phone-transport-note').classList.toggle('hidden', !String(setup.serverUrl || '').startsWith('http://'));
+      el('phone-steps').innerHTML = (setup.instructions || []).map(step => `<li>${escapeHtml(step)}</li>`).join('');
+      el('phone-setup').classList.remove('hidden');
+      msg.className = 'msg ok';
+      msg.textContent = result.alreadySaved ? 'Linked phone tracker setup is shown below.' : 'Phone tracker linked. Finish setup below.';
+      window.SSCommerce.track('phone_tracker_created', { status: result.device && result.device.status });
+    } catch (error) {
+      // A reinstalled app shows a new identifier: offer to replace the old
+      // phone tracker instead of dead-ending on the one-phone rule.
+      if (/already linked to this account/i.test(error.message || '')) {
+        const confirmed = window.confirm('This account already has a phone tracker with a different identifier.\n\nReplace it with this one? The old phone tracker will be removed.');
+        if (confirmed) {
+          return await el('phone-btn').onclick({ replace: true });
+        }
+      }
+      msg.className = 'msg err'; msg.textContent = error.message || 'Could not create the phone tracker.';
+    } finally { button.disabled = false; }
+  };
+
+  el('phone-check').onclick = async () => {
+    const message = el('phone-connection');
+    const button = el('phone-check');
+    if (!phoneDeviceId) return;
+    button.disabled = true;
+    try {
+      const response = await fetch('/api/tracker/devices?refresh=1', { credentials: 'same-origin' });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Could not check the tracker yet.');
+      const trackerDevice = (payload.devices || []).find(device => Number(device.id) === Number(phoneDeviceId));
+      const reportTime = Date.parse(trackerDevice?.position?.serverTime || trackerDevice?.position?.fixTime || '');
+      const recentlyReported = Number.isFinite(reportTime) && reportTime <= Date.now() + 60_000 && Date.now() - reportTime <= 5 * 60_000;
+      if (!payload.remoteAvailable) {
+        message.className = 'msg err';
+        message.textContent = 'The tracking server is unavailable right now. Your phone tracker is saved; check again shortly.';
+      } else if (trackerDevice?.positionSource === 'live' && trackerDevice.online === true && recentlyReported) {
+        message.className = 'msg ok';
+        message.textContent = 'Connected — SmartSurf received a recent location from the phone tracker. It is visible in My Tracker.';
+      } else if (trackerDevice?.position) {
+        message.className = 'msg';
+        message.textContent = 'A previous location is available, but the phone tracker is not currently connected. Enable Continuous tracking, send a new location, then check again.';
+      } else {
+        message.className = 'msg';
+        message.textContent = 'Saved and waiting for the first location. In the phone tracker app, enable Continuous tracking, then tap Send location and check again.';
+      }
+    } catch (error) {
+      message.className = 'msg err'; message.textContent = error.message || 'Could not check the phone connection.';
+    } finally { button.disabled = false; }
+  };
+
+  document.querySelectorAll('[data-copy]').forEach(button => button.onclick = async () => {
+    const code = el(button.dataset.copy).textContent;
+    if (!code) return;
+    try { await navigator.clipboard.writeText(code); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy'; }, 1500); }
+    catch { button.textContent = 'Select text'; }
+  });
+
+  fetch('/api/me', { credentials: 'same-origin' }).then(r => {
+    if (!r.ok) { el('need-login').classList.remove('hidden'); return; }
+    el('activate').classList.remove('hidden');
+    window.SSCommerce.track('activation_opened', {});
+  }).catch(() => el('need-login').classList.remove('hidden'));
+})();
+</script>
+</body>
+</html>
